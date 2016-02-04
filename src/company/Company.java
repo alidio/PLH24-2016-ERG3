@@ -16,12 +16,7 @@ public class Company {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //test1
-        //TEST2
-        //test3
-        //DION
-        //kjhgjhg
-        //blah blah
+      
     }
     
 }
