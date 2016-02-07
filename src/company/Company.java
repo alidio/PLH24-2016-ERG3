@@ -5,6 +5,8 @@
  */
 package company;
 
+import Forms.*;
+
 /**
  *
  * @author Dionysis
@@ -14,9 +16,13 @@ public class Company {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-      //test apo geraka....
-    }
-    
+    public static void main(String[] args) throws Exception{     
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                FRM_Menu MainScr = new FRM_Menu();
+                        MainScr.setVisible(true); 
+            }
+        });    
+    }    
 }
