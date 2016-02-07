@@ -5,6 +5,10 @@
  */
 package Forms;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import javax.swing.JFrame;
+
 /**
  *
  * @author Dionysis
@@ -89,6 +93,11 @@ public class FRM_Menu extends javax.swing.JFrame {
         jMenu2.setText("Εργαζόμενοι");
 
         jMenuItem4.setText("Διαχείριση Εργαζομένων");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenuBar1.add(jMenu2);
@@ -173,6 +182,11 @@ public class FRM_Menu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+        showModalFrame(new FRM_EmployeeManagement());
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -207,7 +221,43 @@ public class FRM_Menu extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void showModalFrame(JFrame f) {
+        f.setVisible(true);
+        FRM_Menu thisFrame = this;
 
+        thisFrame.setEnabled(false);
+        f.addWindowListener(new WindowListener() {
+            @Override
+            public void windowClosed(WindowEvent arg0) {
+                thisFrame.setEnabled(true);
+            }
+
+            @Override
+            public void windowActivated(WindowEvent arg0) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent arg0) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent arg0) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent arg0) {
+            }
+
+            @Override
+            public void windowIconified(WindowEvent arg0) {
+            }
+
+            @Override
+            public void windowOpened(WindowEvent arg0) {
+            }
+        });
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
