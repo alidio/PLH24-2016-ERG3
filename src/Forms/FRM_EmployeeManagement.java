@@ -54,42 +54,44 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        PBNew = new javax.swing.JButton();
+        PBUpd = new javax.swing.JButton();
+        PBDel = new javax.swing.JButton();
         label2 = new java.awt.Label();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Εργαζόμενοι");
 
-        jButton1.setText("Νέο");
-        jButton1.setActionCommand("NewEmployee");
-        jButton1.setName("PBNewEmployee"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        PBNew.setText("Νέο");
+        PBNew.setActionCommand("NewEmployee");
+        PBNew.setName("PBNewEmployee"); // NOI18N
+        PBNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                PBNewActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Μεταβολή");
-        jButton2.setActionCommand("UpdEmployee");
-        jButton2.setName("PBUpdEmployee"); // NOI18N
+        PBUpd.setText("Μεταβολή");
+        PBUpd.setActionCommand("UpdEmployee");
+        PBUpd.setName("PBUpdEmployee"); // NOI18N
 
-        jButton3.setText("Διαγραφή");
-        jButton3.setToolTipText("");
-        jButton3.setActionCommand("DelEmployee");
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jButton3.setName("PBDelEmployee"); // NOI18N
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        PBDel.setText("Διαγραφή");
+        PBDel.setToolTipText("");
+        PBDel.setActionCommand("DelEmployee");
+        PBDel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        PBDel.setName("PBDelEmployee"); // NOI18N
+        PBDel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                PBDelActionPerformed(evt);
             }
         });
 
         label2.setAlignment(java.awt.Label.CENTER);
         label2.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
-        label2.setText("Διαχείριση Εργαζόμενων");
+        label2.setText("Διαχείριση Εργαζομένων");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -120,6 +122,8 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
+        jButton1.setText("Έξοδος");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -130,12 +134,16 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(PBNew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(PBUpd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)))
+                        .addComponent(PBDel)))
                 .addGap(0, 16, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,22 +154,23 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addContainerGap(121, Short.MAX_VALUE))
+                    .addComponent(PBNew)
+                    .addComponent(PBUpd)
+                    .addComponent(PBDel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addComponent(jButton1))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void PBNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBNewActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_PBNewActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void PBDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBDelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_PBDelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,9 +208,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton PBDel;
+    private javax.swing.JButton PBNew;
+    private javax.swing.JButton PBUpd;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private java.awt.Label label2;

@@ -3,6 +3,7 @@
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="&#x395;&#x3c1;&#x3b3;&#x3b1;&#x3b6;&#x3cc;&#x3bc;&#x3b5;&#x3bd;&#x3bf;&#x3b9;"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -29,14 +30,19 @@
                   <Component id="jScrollPane1" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="label2" alignment="0" min="-2" pref="452" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="PBNew" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                      <Component id="PBUpd" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                      <Component id="PBDel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="0" pref="16" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -49,34 +55,35 @@
               <Component id="jScrollPane1" min="-2" pref="200" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="PBNew" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="PBUpd" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="PBDel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="121" max="32767" attributes="0"/>
+              <EmptySpace pref="47" max="32767" attributes="0"/>
+              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="PBNew">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x39d;&#x3ad;&#x3bf;"/>
         <Property name="actionCommand" type="java.lang.String" value="NewEmployee"/>
         <Property name="name" type="java.lang.String" value="PBNewEmployee" noResource="true"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PBNewActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="PBUpd">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x39c;&#x3b5;&#x3c4;&#x3b1;&#x3b2;&#x3bf;&#x3bb;&#x3ae;"/>
         <Property name="actionCommand" type="java.lang.String" value="UpdEmployee"/>
         <Property name="name" type="java.lang.String" value="PBUpdEmployee" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="PBDel">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x394;&#x3b9;&#x3b1;&#x3b3;&#x3c1;&#x3b1;&#x3c6;&#x3ae;"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -87,7 +94,7 @@
         <Property name="name" type="java.lang.String" value="PBDelEmployee" noResource="true"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PBDelActionPerformed"/>
       </Events>
     </Component>
     <Component class="java.awt.Label" name="label2">
@@ -96,7 +103,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Arial" size="24" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="&#x394;&#x3b9;&#x3b1;&#x3c7;&#x3b5;&#x3af;&#x3c1;&#x3b9;&#x3c3;&#x3b7; &#x395;&#x3c1;&#x3b3;&#x3b1;&#x3b6;&#x3cc;&#x3bc;&#x3b5;&#x3bd;&#x3c9;&#x3bd;"/>
+        <Property name="text" type="java.lang.String" value="&#x394;&#x3b9;&#x3b1;&#x3c7;&#x3b5;&#x3af;&#x3c1;&#x3b9;&#x3c3;&#x3b7; &#x395;&#x3c1;&#x3b3;&#x3b1;&#x3b6;&#x3bf;&#x3bc;&#x3ad;&#x3bd;&#x3c9;&#x3bd;"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -123,5 +130,10 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="jButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x388;&#x3be;&#x3bf;&#x3b4;&#x3bf;&#x3c2;"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

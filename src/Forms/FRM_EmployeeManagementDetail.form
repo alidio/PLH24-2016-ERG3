@@ -35,9 +35,9 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jTextField1" alignment="0" min="-2" pref="224" max="-2" attributes="0"/>
-                          <Component id="jTextField2" alignment="0" min="-2" pref="257" max="-2" attributes="0"/>
-                          <Component id="jTextField3" alignment="1" min="-2" pref="365" max="-2" attributes="0"/>
+                          <Component id="TFSurname" alignment="0" min="-2" pref="224" max="-2" attributes="0"/>
+                          <Component id="TFName" alignment="0" min="-2" pref="257" max="-2" attributes="0"/>
+                          <Component id="TFEmail" alignment="1" min="-2" pref="365" max="-2" attributes="0"/>
                           <Component id="jComboBox1" alignment="0" min="-2" pref="224" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -61,17 +61,17 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="TFSurname" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="TFName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="TFEmail" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -99,7 +99,7 @@
         <Property name="text" type="java.lang.String" value="&#x395;&#x3c0;&#x3b5;&#x3be;&#x3b5;&#x3c1;&#x3b3;&#x3b1;&#x3c3;&#x3af;&#x3b1; &#x395;&#x3c1;&#x3b3;&#x3b1;&#x3b6;&#x3cc;&#x3bc;&#x3b5;&#x3bd;&#x3c9;&#x3bd;"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField1">
+    <Component class="javax.swing.JTextField" name="TFSurname">
       <Properties>
         <Property name="name" type="java.lang.String" value="FSurname" noResource="true"/>
       </Properties>
@@ -137,12 +137,12 @@
         <Property name="name" type="java.lang.String" value="CBManager" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField3">
+    <Component class="javax.swing.JTextField" name="TFEmail">
       <Properties>
         <Property name="name" type="java.lang.String" value="FEmail" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField2">
+    <Component class="javax.swing.JTextField" name="TFName">
       <Properties>
         <Property name="name" type="java.lang.String" value="FName" noResource="true"/>
       </Properties>
