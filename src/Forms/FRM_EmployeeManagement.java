@@ -152,8 +152,9 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                     .addComponent(PBNew)
                     .addComponent(PBUpd)
                     .addComponent(PBDel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                .addComponent(PBExit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(PBExit)
+                .addContainerGap())
         );
 
         pack();
