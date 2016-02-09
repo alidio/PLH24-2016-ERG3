@@ -1,25 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Forms;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
 import model.*;
 
-/**
- *
- * @author Dionysis
- */
 public class FRM_EmployeeManagement extends javax.swing.JFrame {
     
     List<Employee> EmployeeList;
     
-    /**
-     * Creates new form FRM_EmployeeManagement
-     */
     public FRM_EmployeeManagement() {
         initComponents();
         
@@ -38,9 +27,9 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         //Γεμίζουμε τον πίνακα με δεδομένα
         int k = 0;
         for (Employee e : EmployeeList) {            
-            jTable1.setValueAt(e.getFname(), k, 0);
-            jTable1.setValueAt(e.getLname(), k, 1);
-            jTable1.setValueAt(e.getEmail(), k, 2);                    
+            TAEmployee.setValueAt(e.getFname(), k, 0);
+            TAEmployee.setValueAt(e.getLname(), k, 1);
+            TAEmployee.setValueAt(e.getEmail(), k, 2);                    
             k++;
         }
     }
@@ -59,11 +48,12 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         PBDel = new javax.swing.JButton();
         label2 = new java.awt.Label();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        TAEmployee = new javax.swing.JTable();
+        PBExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Εργαζόμενοι");
+        setResizable(false);
 
         PBNew.setText("Νέο");
         PBNew.setActionCommand("NewEmployee");
@@ -93,7 +83,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         label2.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         label2.setText("Διαχείριση Εργαζομένων");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TAEmployee.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -120,9 +110,14 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TAEmployee);
 
-        jButton1.setText("Έξοδος");
+        PBExit.setText("Έξοδος");
+        PBExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PBExitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -142,7 +137,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                 .addGap(0, 16, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(PBExit)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -158,7 +153,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                     .addComponent(PBUpd)
                     .addComponent(PBDel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                .addComponent(jButton1))
+                .addComponent(PBExit))
         );
 
         pack();
@@ -172,9 +167,13 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_PBDelActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void PBExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExitActionPerformed
+        // TODO add your handling code here:
+        //Κλείσιμο παραθύρου
+        dispose();
+    }//GEN-LAST:event_PBExitActionPerformed
+
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -209,11 +208,11 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton PBDel;
+    private javax.swing.JButton PBExit;
     private javax.swing.JButton PBNew;
     private javax.swing.JButton PBUpd;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JTable TAEmployee;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private java.awt.Label label2;
     // End of variables declaration//GEN-END:variables
 }

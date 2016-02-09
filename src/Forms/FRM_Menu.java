@@ -1,25 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Forms;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.swing.JFrame;
 
-/**
- *
- * @author Dionysis
- */
 public class FRM_Menu extends javax.swing.JFrame {
+    private EntityManagerFactory emf;
+    private EntityManager em;
 
-    /**
-     * Creates new form FRM_Menu
-     */
+    //Οι παρακάτω μέθοδοι μας επιτρέπουν να συνδεθούμε με τη βάση δεδομένων της 
+    //εφαρμογής, και να την κατά την είσοδο και έξοδο από την εφαρμογή.
+    //Σε περίπτωση λάθους το μύνημα επιστρέφεται στο exception.
+    private void LoginDataBase() {
+        //Σύνδεση της εφαρμογής με τη βάση δεδομένων
+        try {
+            emf = Persistence.createEntityManagerFactory("companyPU");
+            em = emf.createEntityManager();
+        }
+        catch(Exception exception) {
+            System.err.println(exception.getMessage());
+            System.exit(1);
+        }
+    }
+    private void LogoutDataBase() {
+        //Αποσύνδεση από τη βάση δεδομένων.
+        em.close();
+        emf.close();
+    }    
+    
     public FRM_Menu() {
         initComponents();
+        LoginDataBase();
     }
 
     /**
@@ -175,6 +189,7 @@ public class FRM_Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void MNIExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIExitActionPerformed
+        LogoutDataBase();
         System.exit(0);
     }//GEN-LAST:event_MNIExitActionPerformed
 

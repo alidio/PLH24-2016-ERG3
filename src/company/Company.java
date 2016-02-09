@@ -21,7 +21,7 @@ public class Company {
             @Override
             public void run() {
                 FRM_Menu MainScr = new FRM_Menu();
-                        MainScr.setVisible(true); 
+                MainScr.setVisible(true); 
             }
         });    
     }    
