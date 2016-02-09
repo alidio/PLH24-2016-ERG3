@@ -40,15 +40,15 @@ public class FRM_Menu extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        MNIExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        MNIEmployes = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        MNIWorkPermit = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        MNIXml = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -80,44 +80,44 @@ public class FRM_Menu extends javax.swing.JFrame {
 
         jMenu1.setText("Αρχείο");
 
-        jMenuItem1.setText("'Εξοδος");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        MNIExit.setText("'Εξοδος");
+        MNIExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                MNIExitActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(MNIExit);
 
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Εργαζόμενοι");
 
-        jMenuItem4.setText("Διαχείριση Εργαζομένων");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        MNIEmployes.setText("Διαχείριση Εργαζομένων");
+        MNIEmployes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                MNIEmployesActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem4);
+        jMenu2.add(MNIEmployes);
 
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Άδειες");
 
-        jMenuItem3.setText("Διαχείριση Αδειών");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        MNIWorkPermit.setText("Διαχείριση Αδειών");
+        MNIWorkPermit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                MNIWorkPermitActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem3);
+        jMenu3.add(MNIWorkPermit);
 
         jMenuBar1.add(jMenu3);
 
         jMenu4.setText("Βοηθητικά");
 
-        jMenuItem2.setText("Εξαχωγή Αιτημάτων σε XML");
-        jMenu4.add(jMenuItem2);
+        MNIXml.setText("Εξαχωγή Αιτημάτων σε XML");
+        jMenu4.add(MNIXml);
 
         jMenuBar1.add(jMenu4);
 
@@ -174,18 +174,18 @@ public class FRM_Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void MNIExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_MNIExitActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void MNIWorkPermitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIWorkPermitActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_MNIWorkPermitActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void MNIEmployesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIEmployesActionPerformed
         // TODO add your handling code here:
         showModalFrame(new FRM_EmployeeManagement());
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_MNIEmployesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,6 +259,10 @@ public class FRM_Menu extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem MNIEmployes;
+    private javax.swing.JMenuItem MNIExit;
+    private javax.swing.JMenuItem MNIWorkPermit;
+    private javax.swing.JMenuItem MNIXml;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -271,9 +275,5 @@ public class FRM_Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     // End of variables declaration//GEN-END:variables
 }

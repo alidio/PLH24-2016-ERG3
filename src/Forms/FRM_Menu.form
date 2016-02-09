@@ -9,12 +9,12 @@
             <Property name="text" type="java.lang.String" value="&#x391;&#x3c1;&#x3c7;&#x3b5;&#x3af;&#x3bf;"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="MNIExit">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&apos;&#x395;&#x3be;&#x3bf;&#x3b4;&#x3bf;&#x3c2;"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MNIExitActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -24,12 +24,12 @@
             <Property name="text" type="java.lang.String" value="&#x395;&#x3c1;&#x3b3;&#x3b1;&#x3b6;&#x3cc;&#x3bc;&#x3b5;&#x3bd;&#x3bf;&#x3b9;"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+            <MenuItem class="javax.swing.JMenuItem" name="MNIEmployes">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x394;&#x3b9;&#x3b1;&#x3c7;&#x3b5;&#x3af;&#x3c1;&#x3b9;&#x3c3;&#x3b7; &#x395;&#x3c1;&#x3b3;&#x3b1;&#x3b6;&#x3bf;&#x3bc;&#x3ad;&#x3bd;&#x3c9;&#x3bd;"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem4ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MNIEmployesActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -39,12 +39,12 @@
             <Property name="text" type="java.lang.String" value="&#x386;&#x3b4;&#x3b5;&#x3b9;&#x3b5;&#x3c2;"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+            <MenuItem class="javax.swing.JMenuItem" name="MNIWorkPermit">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x394;&#x3b9;&#x3b1;&#x3c7;&#x3b5;&#x3af;&#x3c1;&#x3b9;&#x3c3;&#x3b7; &#x391;&#x3b4;&#x3b5;&#x3b9;&#x3ce;&#x3bd;"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MNIWorkPermitActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -54,7 +54,7 @@
             <Property name="text" type="java.lang.String" value="&#x392;&#x3bf;&#x3b7;&#x3b8;&#x3b7;&#x3c4;&#x3b9;&#x3ba;&#x3ac;"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+            <MenuItem class="javax.swing.JMenuItem" name="MNIXml">
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x395;&#x3be;&#x3b1;&#x3c7;&#x3c9;&#x3b3;&#x3ae; &#x391;&#x3b9;&#x3c4;&#x3b7;&#x3bc;&#x3ac;&#x3c4;&#x3c9;&#x3bd; &#x3c3;&#x3b5; XML"/>
               </Properties>
@@ -65,7 +65,7 @@
     </Menu>
   </NonVisualComponents>
   <Properties>
-    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="defaultCloseOperation" type="int" value="0"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
