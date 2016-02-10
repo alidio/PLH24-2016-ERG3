@@ -66,6 +66,11 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Εργαζόμενοι");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         PBNew.setText("Νέο");
         PBNew.setActionCommand("NewEmployee");
@@ -188,6 +193,13 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         prevwin.setEnabled(true);
         dispose();
     }//GEN-LAST:event_PBExitActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        //Κλείσιμο παραθύρου
+        //Ενεργοποίηση προηγούμενου παραθύρου
+        prevwin.setEnabled(true);
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
 
 
     public static void main(String args[]) {
