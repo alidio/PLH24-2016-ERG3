@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import model.*;
 
 public class FRM_EmployeeManagement extends javax.swing.JFrame {
@@ -12,40 +13,16 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     private EntityManager em;
     private Employee SelectedEmp;
     
-    //List<Employee> EmployeeList;
-    
     public FRM_EmployeeManagement(EntityManager em, JFrame prevwin) {
         
         this.prevwin = prevwin;
         this.em = em;
+        
         //Κλειδωμα προηγούμενου παραθύρου
         this.prevwin.setEnabled(false);        
         initComponents();
-            
-        
-        
-        /*test data
-        Employee e1 = new Employee(1L,"Nikos","Nikolaou","nik.nik@yahoo.gr");
-        Employee e2 = new Employee(2L,"Dionysis","Dionysiou","Dio.Dio@gmail.gr");
-        Employee e3 = new Employee(3L,"Katerina","Katerinoy","kat.kat@gmail.gr");
-        
-
-        EmployeeList = new ArrayList<>();
-        
-        EmployeeList.add(e1);
-        EmployeeList.add(e2);
-        EmployeeList.add(e3);
-        
-        //Γεμίζουμε τον πίνακα με δεδομένα
-        int k = 0;
-        for (Employee e : EmployeeList) {            
-            TAEmployee.setValueAt(e.getFname(), k, 0);
-            TAEmployee.setValueAt(e.getLname(), k, 1);
-            TAEmployee.setValueAt(e.getEmail(), k, 2);                    
-            k++;
-        }*/
     }
-    
+   
         
     /**
      * This method is called from within the constructor to initialize the form.
@@ -194,8 +171,6 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     }//GEN-LAST:event_PBDelActionPerformed
 
     private void PBExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExitActionPerformed
-        // TODO add your handling code here:
-        
         //Κλείσιμο παραθύρου
         //Ενεργοποίηση προηγούμενου παραθύρου
         prevwin.setEnabled(true);
@@ -210,8 +185,18 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void PBUpdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBUpdActionPerformed
-        FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,this,SelectedEmp);
-        FORM_EmpMngmntDet.setVisible(true);
+        
+        //Εάν έχει επιλεγεί κάποιος από τη λίστα
+        if (TAEmployee.getSelectedRow()>=0) {
+            //ο Επιλεγμένος εργαζόμενος από τη λίστα περνάει για επεξεργασία στο επόμενο παράθυρο.
+            SelectedEmp = employeeList.get(TAEmployee.getSelectedRow());
+
+            //Άνοιγμα παραθύρου επεξεργασίας εργαζομένων
+            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,this,SelectedEmp);
+            FORM_EmpMngmntDet.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Επιλέξτε εργαζόμενο", null, WIDTH, null);
+        }
     }//GEN-LAST:event_PBUpdActionPerformed
 
 

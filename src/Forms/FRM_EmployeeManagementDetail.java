@@ -17,7 +17,6 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
         //Κλειδωμα προηγούμενου παραθύρου
         this.prevwin.setEnabled(false);        
         initComponents();
-        initComponents();
     }
 
     /**
