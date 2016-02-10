@@ -206,7 +206,12 @@ public class FRM_Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_MNIWorkPermitActionPerformed
 
     private void MNIEmployesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIEmployesActionPerformed
-        // TODO add your handling code here:
+        //Επιλέχθηκε το άνοιγμα της φόρμας διαχ/σης εργαζομένων
+        //ανοίγω ένα νέο παράθυρο τύπου FRM_EmployeeManagement στο
+        //οποίο σαν παραμέτρους στέλνω τον EntityManager και το τρέχον παράθυρο
+        //με σκοπό να μπορώ από τον κώδικα του επόμενου παραθύρου να ελέγχω
+        //τη βάση δεδομένων και την ενεργοποίηση - απενεργοποίηση του τρέχοντος
+        //παραθύρου.
         FRM_EmployeeManagement FORM_EmpMngmnt = new FRM_EmployeeManagement(em,this);
         FORM_EmpMngmnt.setVisible(true);
     }//GEN-LAST:event_MNIEmployesActionPerformed
