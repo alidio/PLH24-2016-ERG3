@@ -5,11 +5,11 @@
  */
 package Forms;
 
+import javax.swing.JFrame;
 import model.*;
 
 public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
-    
-    private Employee emp;
+  
 
     public FRM_EmployeeManagementDetail() {   
         initComponents();

@@ -11,6 +11,7 @@ public class FRM_Menu extends javax.swing.JFrame {
     private EntityManagerFactory emf;
     private EntityManager em;
 
+    //--------------------------------------------------------------------------
     //Οι παρακάτω μέθοδοι μας επιτρέπουν να συνδεθούμε με τη βάση δεδομένων της 
     //εφαρμογής, και να την κατά την είσοδο και έξοδο από την εφαρμογή.
     //Σε περίπτωση λάθους το μύνημα επιστρέφεται στο exception.
@@ -30,6 +31,8 @@ public class FRM_Menu extends javax.swing.JFrame {
         em.close();
         emf.close();
     }    
+    //--------------------------------------------------------------------------
+    
     
     public FRM_Menu() {
         initComponents();
@@ -53,16 +56,21 @@ public class FRM_Menu extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        MNUFile = new javax.swing.JMenu();
         MNIExit = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        MNUEmployee = new javax.swing.JMenu();
         MNIEmployes = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
+        MNUWorkpermit = new javax.swing.JMenu();
         MNIWorkPermit = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
+        MNUHelp = new javax.swing.JMenu();
         MNIXml = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -92,7 +100,7 @@ public class FRM_Menu extends javax.swing.JFrame {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Αντύπας Παναγιώτης");
 
-        jMenu1.setText("Αρχείο");
+        MNUFile.setText("Αρχείο");
 
         MNIExit.setText("'Εξοδος");
         MNIExit.addActionListener(new java.awt.event.ActionListener() {
@@ -100,11 +108,11 @@ public class FRM_Menu extends javax.swing.JFrame {
                 MNIExitActionPerformed(evt);
             }
         });
-        jMenu1.add(MNIExit);
+        MNUFile.add(MNIExit);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(MNUFile);
 
-        jMenu2.setText("Εργαζόμενοι");
+        MNUEmployee.setText("Εργαζόμενοι");
 
         MNIEmployes.setText("Διαχείριση Εργαζομένων");
         MNIEmployes.addActionListener(new java.awt.event.ActionListener() {
@@ -112,11 +120,11 @@ public class FRM_Menu extends javax.swing.JFrame {
                 MNIEmployesActionPerformed(evt);
             }
         });
-        jMenu2.add(MNIEmployes);
+        MNUEmployee.add(MNIEmployes);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(MNUEmployee);
 
-        jMenu3.setText("Άδειες");
+        MNUWorkpermit.setText("Άδειες");
 
         MNIWorkPermit.setText("Διαχείριση Αδειών");
         MNIWorkPermit.addActionListener(new java.awt.event.ActionListener() {
@@ -124,16 +132,16 @@ public class FRM_Menu extends javax.swing.JFrame {
                 MNIWorkPermitActionPerformed(evt);
             }
         });
-        jMenu3.add(MNIWorkPermit);
+        MNUWorkpermit.add(MNIWorkPermit);
 
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(MNUWorkpermit);
 
-        jMenu4.setText("Βοηθητικά");
+        MNUHelp.setText("Βοηθητικά");
 
-        MNIXml.setText("Εξαχωγή Αιτημάτων σε XML");
-        jMenu4.add(MNIXml);
+        MNIXml.setText("Εξαγωγή Αιτημάτων σε XML");
+        MNUHelp.add(MNIXml);
 
-        jMenuBar1.add(jMenu4);
+        jMenuBar1.add(MNUHelp);
 
         setJMenuBar(jMenuBar1);
 
@@ -199,8 +207,15 @@ public class FRM_Menu extends javax.swing.JFrame {
 
     private void MNIEmployesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIEmployesActionPerformed
         // TODO add your handling code here:
-        showModalFrame(new FRM_EmployeeManagement());
+        FRM_EmployeeManagement FORM_EmpMngmnt = new FRM_EmployeeManagement(em,this);
+        FORM_EmpMngmnt.setVisible(true);
     }//GEN-LAST:event_MNIEmployesActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        LogoutDataBase();
+        System.exit(0);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -237,47 +252,15 @@ public class FRM_Menu extends javax.swing.JFrame {
         });
     }
     
-    private void showModalFrame(JFrame f) {
-        f.setVisible(true);
-        FRM_Menu thisFrame = this;
-
-        thisFrame.setEnabled(false);
-        f.addWindowListener(new WindowListener() {
-            @Override
-            public void windowClosed(WindowEvent arg0) {
-                thisFrame.setEnabled(true);
-            }
-
-            @Override
-            public void windowActivated(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowIconified(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowOpened(WindowEvent arg0) {
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MNIEmployes;
     private javax.swing.JMenuItem MNIExit;
     private javax.swing.JMenuItem MNIWorkPermit;
     private javax.swing.JMenuItem MNIXml;
+    private javax.swing.JMenu MNUEmployee;
+    private javax.swing.JMenu MNUFile;
+    private javax.swing.JMenu MNUHelp;
+    private javax.swing.JMenu MNUWorkpermit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -285,10 +268,6 @@ public class FRM_Menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     // End of variables declaration//GEN-END:variables
 }

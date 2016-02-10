@@ -3,14 +3,26 @@ package Forms;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.swing.JFrame;
 import model.*;
 
 public class FRM_EmployeeManagement extends javax.swing.JFrame {
     
+    private JFrame prevwin;
+    private EntityManager em;
+    
+    
     List<Employee> EmployeeList;
     
-    public FRM_EmployeeManagement() {
+    public FRM_EmployeeManagement(EntityManager em, JFrame prevwin) {
+        
+        this.prevwin = prevwin;
+        this.em = em;
+        //Κλειδωμα προηγούμενου παραθύρου
+        this.prevwin.setEnabled(false);        
         initComponents();
+        
+        
         
         //test data
         Employee e1 = new Employee(1L,"Nikos","Nikolaou","nik.nik@yahoo.gr");
@@ -51,7 +63,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         TAEmployee = new javax.swing.JTable();
         PBExit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Εργαζόμενοι");
         setResizable(false);
 
@@ -170,7 +182,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
 
     private void PBExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExitActionPerformed
         // TODO add your handling code here:
+        
         //Κλείσιμο παραθύρου
+        //Ενεργοποίηση προηγούμενου παραθύρου
+        prevwin.setEnabled(true);
         dispose();
     }//GEN-LAST:event_PBExitActionPerformed
 
@@ -199,12 +214,12 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the form 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FRM_EmployeeManagement().setVisible(true);
             }
-        });
+        });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
