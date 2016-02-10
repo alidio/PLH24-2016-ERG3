@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -20,6 +22,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,6 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Employee.findByLname", query = "SELECT e FROM Employee e WHERE e.lname = :lname"),
     @NamedQuery(name = "Employee.findByEmail", query = "SELECT e FROM Employee e WHERE e.email = :email")})
 public class Employee implements Serializable {
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,7 +86,9 @@ public class Employee implements Serializable {
     }
 
     public void setEmployeeId(Long employeeId) {
+        Long oldEmployeeId = this.employeeId;
         this.employeeId = employeeId;
+        changeSupport.firePropertyChange("employeeId", oldEmployeeId, employeeId);
     }
 
     public String getFname() {
@@ -89,7 +96,9 @@ public class Employee implements Serializable {
     }
 
     public void setFname(String fname) {
+        String oldFname = this.fname;
         this.fname = fname;
+        changeSupport.firePropertyChange("fname", oldFname, fname);
     }
 
     public String getLname() {
@@ -97,7 +106,9 @@ public class Employee implements Serializable {
     }
 
     public void setLname(String lname) {
+        String oldLname = this.lname;
         this.lname = lname;
+        changeSupport.firePropertyChange("lname", oldLname, lname);
     }
 
     public String getEmail() {
@@ -105,7 +116,9 @@ public class Employee implements Serializable {
     }
 
     public void setEmail(String email) {
+        String oldEmail = this.email;
         this.email = email;
+        changeSupport.firePropertyChange("email", oldEmail, email);
     }
 
     @XmlTransient
@@ -131,7 +144,9 @@ public class Employee implements Serializable {
     }
 
     public void setManagerId(Employee managerId) {
+        Employee oldManagerId = this.managerId;
         this.managerId = managerId;
+        changeSupport.firePropertyChange("managerId", oldManagerId, managerId);
     }
 
     @XmlTransient
@@ -165,7 +180,16 @@ public class Employee implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Employee[ employeeId=" + employeeId + " ]";
+        //return "model.Employee[employeeId=" + employeeId + " ]";
+        return lname + " " + fname;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

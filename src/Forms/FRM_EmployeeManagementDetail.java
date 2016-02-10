@@ -1,17 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Forms;
 
+import javax.persistence.EntityManager;
 import javax.swing.JFrame;
 import model.*;
 
 public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
-  
+    private Employee SelectedEmployee;
+    private EntityManager em;
+    JFrame prevwin;
 
-    public FRM_EmployeeManagementDetail() {   
+    public FRM_EmployeeManagementDetail(EntityManager em, JFrame prevwin, Employee SelectedEmployee) {           
+        this.em = em;
+        this.SelectedEmployee = SelectedEmployee;
+        this.prevwin = prevwin;
+        
+        //Κλειδωμα προηγούμενου παραθύρου
+        this.prevwin.setEnabled(false);        
+        initComponents();
         initComponents();
     }
 
@@ -23,27 +28,29 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        employeeQuery = java.beans.Beans.isDesignTime() ? null : em.createQuery("SELECT e FROM Employee e");
+        employeeList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(employeeQuery.getResultList());
+        employee1 = SelectedEmployee;
         label1 = new java.awt.Label();
-        TFSurname = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        TFEmail = new javax.swing.JTextField();
+        TFSurname = new javax.swing.JTextField();
         TFName = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        TFEmail = new javax.swing.JTextField();
+        CBManager = new javax.swing.JComboBox();
+        PBSave = new javax.swing.JButton();
+        PBCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         label1.setAlignment(java.awt.Label.CENTER);
-        label1.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        label1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         label1.setName(""); // NOI18N
-        label1.setText("Επεξεργασία Εργαζόμενων");
-
-        TFSurname.setName("FSurname"); // NOI18N
+        label1.setText("Επεξεργασία Εργαζομένων");
 
         jLabel1.setText("Επώνυμο:");
 
@@ -53,18 +60,38 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
 
         jLabel4.setText("Προϊστάμενος:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.setName("CBManager"); // NOI18N
+        TFSurname.setName("FSurname"); // NOI18N
 
-        TFEmail.setName("FEmail"); // NOI18N
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employee1, org.jdesktop.beansbinding.ELProperty.create("${lname}"), TFSurname, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
 
         TFName.setName("FName"); // NOI18N
 
-        jButton4.setText("ΑΠΟΘΗΚΕΥΣΗ");
-        jButton4.setName("PBSave"); // NOI18N
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employee1, org.jdesktop.beansbinding.ELProperty.create("${fname}"), TFName, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
 
-        jButton5.setText("ΑΚΥΡΩΣΗ");
-        jButton5.setName("PBCancel"); // NOI18N
+        TFEmail.setName("FEmail"); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employee1, org.jdesktop.beansbinding.ELProperty.create("${email}"), TFEmail, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        CBManager.setName("CBManager"); // NOI18N
+
+        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employeeList, CBManager);
+        bindingGroup.addBinding(jComboBoxBinding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employee1, org.jdesktop.beansbinding.ELProperty.create("${managerId}"), CBManager, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        bindingGroup.addBinding(binding);
+
+        PBSave.setText("Αποθήκευση");
+        PBSave.setName("PBSave"); // NOI18N
+
+        PBCancel.setText("Ακύρωση");
+        PBCancel.setName("PBCancel"); // NOI18N
+        PBCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PBCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -84,14 +111,14 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
                             .addComponent(TFSurname, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(TFName, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(TFEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(CBManager, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 20, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(110, 110, 110)
-                .addComponent(jButton4)
+                .addComponent(PBSave)
                 .addGap(42, 42, 42)
-                .addComponent(jButton5)
+                .addComponent(PBCancel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -113,63 +140,40 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(CBManager, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addContainerGap(31, Short.MAX_VALUE))
+                    .addComponent(PBSave)
+                    .addComponent(PBCancel))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
+
+        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FRM_EmployeeManagementDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FRM_EmployeeManagementDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FRM_EmployeeManagementDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FRM_EmployeeManagementDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void PBCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBCancelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PBCancelActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FRM_EmployeeManagementDetail().setVisible(true);
-            }
-        });
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox CBManager;
+    private javax.swing.JButton PBCancel;
+    private javax.swing.JButton PBSave;
     private javax.swing.JTextField TFEmail;
     private javax.swing.JTextField TFName;
     private javax.swing.JTextField TFSurname;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox jComboBox1;
+    private model.Employee employee1;
+    private java.util.List<model.Employee> employeeList;
+    private javax.persistence.Query employeeQuery;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private java.awt.Label label1;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

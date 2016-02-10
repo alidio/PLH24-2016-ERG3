@@ -10,9 +10,9 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     
     private JFrame prevwin;
     private EntityManager em;
+    private Employee SelectedEmp;
     
-    
-    List<Employee> EmployeeList;
+    //List<Employee> EmployeeList;
     
     public FRM_EmployeeManagement(EntityManager em, JFrame prevwin) {
         
@@ -21,10 +21,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         //Κλειδωμα προηγούμενου παραθύρου
         this.prevwin.setEnabled(false);        
         initComponents();
+            
         
         
-        
-        //test data
+        /*test data
         Employee e1 = new Employee(1L,"Nikos","Nikolaou","nik.nik@yahoo.gr");
         Employee e2 = new Employee(2L,"Dionysis","Dionysiou","Dio.Dio@gmail.gr");
         Employee e3 = new Employee(3L,"Katerina","Katerinoy","kat.kat@gmail.gr");
@@ -43,9 +43,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
             TAEmployee.setValueAt(e.getLname(), k, 1);
             TAEmployee.setValueAt(e.getEmail(), k, 2);                    
             k++;
-        }
+        }*/
     }
-
+    
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,7 +55,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        employeeQuery = java.beans.Beans.isDesignTime() ? null : em.createQuery("SELECT e FROM Employee e order by e.lname");
+        employeeList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(employeeQuery.getResultList());
         PBNew = new javax.swing.JButton();
         PBUpd = new javax.swing.JButton();
         PBDel = new javax.swing.JButton();
@@ -84,6 +88,11 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         PBUpd.setText("Μεταβολή");
         PBUpd.setActionCommand("UpdEmployee");
         PBUpd.setName("PBUpdEmployee"); // NOI18N
+        PBUpd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PBUpdActionPerformed(evt);
+            }
+        });
 
         PBDel.setText("Διαγραφή");
         PBDel.setToolTipText("");
@@ -100,33 +109,26 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         label2.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         label2.setText("Διαχείριση Εργαζομένων");
 
-        TAEmployee.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "'Ονομα", "Επώνυμο", "E-Mail", "Προϊστάμενος"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
+        TAEmployee.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employeeList, TAEmployee);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${lname}"));
+        columnBinding.setColumnName("Επώνυμο");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fname}"));
+        columnBinding.setColumnName("Όνομα");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${email}"));
+        columnBinding.setColumnName("Email");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${managerId}"));
+        columnBinding.setColumnName("Προϊστάμενος");
+        columnBinding.setColumnClass(model.Employee.class);
+        columnBinding.setEditable(false);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
         jScrollPane1.setViewportView(TAEmployee);
 
         PBExit.setText("Έξοδος");
@@ -140,22 +142,26 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(PBNew)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PBUpd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PBDel)))
-                .addGap(0, 16, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(PBExit)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(PBNew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(PBUpd)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(PBDel)))
+                        .addGap(0, 211, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,10 +175,12 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                     .addComponent(PBNew)
                     .addComponent(PBUpd)
                     .addComponent(PBDel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                 .addComponent(PBExit)
                 .addContainerGap())
         );
+
+        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -200,6 +208,11 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         prevwin.setEnabled(true);
         dispose();
     }//GEN-LAST:event_formWindowClosing
+
+    private void PBUpdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBUpdActionPerformed
+        FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,this,SelectedEmp);
+        FORM_EmpMngmntDet.setVisible(true);
+    }//GEN-LAST:event_PBUpdActionPerformed
 
 
     public static void main(String args[]) {
@@ -240,7 +253,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     private javax.swing.JButton PBNew;
     private javax.swing.JButton PBUpd;
     private javax.swing.JTable TAEmployee;
+    private java.util.List<model.Employee> employeeList;
+    private javax.persistence.Query employeeQuery;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label label2;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
