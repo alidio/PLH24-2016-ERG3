@@ -40,7 +40,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         PBUpd = new javax.swing.JButton();
         PBDel = new javax.swing.JButton();
         label2 = new java.awt.Label();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        SPEmployes = new javax.swing.JScrollPane();
         TAEmployee = new javax.swing.JTable();
         PBExit = new javax.swing.JButton();
 
@@ -83,7 +83,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         });
 
         label2.setAlignment(java.awt.Label.CENTER);
-        label2.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        label2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         label2.setText("Διαχείριση Εργαζομένων");
 
         TAEmployee.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -106,7 +106,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
-        jScrollPane1.setViewportView(TAEmployee);
+        SPEmployes.setViewportView(TAEmployee);
 
         PBExit.setText("Έξοδος");
         PBExit.addActionListener(new java.awt.event.ActionListener() {
@@ -127,18 +127,17 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(PBNew)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(PBUpd)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(PBDel)))
-                        .addGap(0, 211, Short.MAX_VALUE))))
+                        .addComponent(PBNew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(PBUpd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(PBDel)
+                        .addGap(0, 440, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(label2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SPEmployes))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,15 +145,15 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(3, 3, 3)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SPEmployes, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PBNew)
                     .addComponent(PBUpd)
                     .addComponent(PBDel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PBExit)
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
         bindingGroup.bind();
@@ -163,11 +162,43 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void PBNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBNewActionPerformed
-        // TODO add your handling code here:
+            //Άνοιγμα παραθύρου επεξεργασίας εργαζομένων
+            SelectedEmp = new Employee();
+            employeeList.add(SelectedEmp);
+            
+            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,this,SelectedEmp);
+            FORM_EmpMngmntDet.setVisible(true);
     }//GEN-LAST:event_PBNewActionPerformed
 
     private void PBDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBDelActionPerformed
-        // TODO add your handling code here:
+        //Εάν έχει επιλεγεί κάποιος από τη λίστα
+        if (TAEmployee.getSelectedRow()>=0) {
+            //ο Επιλεγμένος εργαζόμενος από τη λίστα περνάει για επεξεργασία στο επόμενο παράθυρο.
+            SelectedEmp = employeeList.get(TAEmployee.getSelectedRow());
+            
+            //Ο Χρήστης πάτησε διαγραφή.
+            //Οι αλλαγές του θα σωθούν στη βάση.
+            //Έναρξη διαδικασίας ενημέρωσης ΒΔ
+            
+            em.getTransaction().begin();
+            try {
+                //Διαγραφή αντικειμένου απο τη βάση
+                em.remove(SelectedEmp);
+                em.getTransaction().commit();
+
+                //Διαγραφή αντικειμένου απο τη λίστα
+                employeeList.remove(SelectedEmp);
+                
+            }catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Δεν μπορεί να γίνει διαγραφή διότι υπάρχει συσχετιζόμενος πίνακας", null, WIDTH, null);
+                em.getTransaction().rollback();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Επιλέξτε εργαζόμενο", null, WIDTH, null);
+        }
+        
+
+
     }//GEN-LAST:event_PBDelActionPerformed
 
     private void PBExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExitActionPerformed
@@ -237,10 +268,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     private javax.swing.JButton PBExit;
     private javax.swing.JButton PBNew;
     private javax.swing.JButton PBUpd;
+    private javax.swing.JScrollPane SPEmployes;
     private javax.swing.JTable TAEmployee;
     private java.util.List<model.Employee> employeeList;
     private javax.persistence.Query employeeQuery;
-    private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label label2;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
