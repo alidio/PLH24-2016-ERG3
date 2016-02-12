@@ -1,5 +1,8 @@
 package Forms;
 
+import company.MyWindowEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -165,9 +168,44 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
             //Άνοιγμα παραθύρου επεξεργασίας εργαζομένων
             SelectedEmp = new Employee();
             employeeList.add(SelectedEmp);
-            
+  
             FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,this,SelectedEmp);
             FORM_EmpMngmntDet.setVisible(true);
+            
+            
+            //--------------------------------------------------------------------
+            FORM_EmpMngmntDet.addWindowListener(new WindowListener() {
+            @Override
+            public void windowClosed(WindowEvent arg0) {
+
+                if (MyWindowEvent.isExitAndSave(arg0)) {
+                    employeeList.remove(SelectedEmp);
+                }
+            }
+            @Override
+            public void windowActivated(WindowEvent arg0) {
+            }
+            @Override
+            public void windowClosing(WindowEvent arg0) {
+            }
+            @Override
+            public void windowDeactivated(WindowEvent arg0) {
+            }
+            @Override
+            public void windowDeiconified(WindowEvent arg0) {
+            }
+            @Override
+            public void windowIconified(WindowEvent arg0) {
+            }
+            @Override
+            public void windowOpened(WindowEvent arg0) {
+            }
+        });
+        //--------------------------------------------------------------------        
+            
+            
+            
+            
     }//GEN-LAST:event_PBNewActionPerformed
 
     private void PBDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBDelActionPerformed

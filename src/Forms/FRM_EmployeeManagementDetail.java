@@ -1,5 +1,8 @@
 package Forms;
 
+import company.MyWindowEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import static java.awt.image.ImageObserver.WIDTH;
 import javax.persistence.EntityManager;
 import javax.swing.JFrame;
@@ -14,7 +17,7 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     private String Fname;
     private String Emale;
     private Employee Manager;
-
+    
     //Ο υπάλληλος που έχει επιλεγεί στην προηγούμενη οθόνη.
     private Employee SelectedEmployee;
         
@@ -201,7 +204,8 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
         //Ενεργοποίηση προηγούμενου παραθύρου
         prevwin.setEnabled(true);
         
-        dispose();        
+        closeMe(true);
+        //dispose();        
     }//GEN-LAST:event_PBCancelActionPerformed
 
     private void PBSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBSaveActionPerformed
@@ -230,7 +234,19 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TFSurnameActionPerformed
 
-   
+    /**
+     * Μέθοδος για τον έλεγχο του τρόπου κλεισίματος του παραθύρου
+     *
+     * @param exitAndSave boolean true for save changes, false for cancel
+     * changes
+     */
+    private void closeMe(boolean exitAndSave) {
+        MyWindowEvent we = new MyWindowEvent(this, WindowEvent.WINDOW_CLOSED, exitAndSave);
+        for (WindowListener l : this.getWindowListeners()) {
+            l.windowClosed(we);
+        }
+        this.setVisible(false);
+    }   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox CBManager;
