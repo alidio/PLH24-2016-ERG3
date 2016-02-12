@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
 import model.*;
 
 public class FRM_EmployeeManagement extends javax.swing.JFrame {
@@ -168,8 +169,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
             //Άνοιγμα παραθύρου επεξεργασίας εργαζομένων
             SelectedEmp = new Employee();
             employeeList.add(SelectedEmp);
-  
-            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,this,SelectedEmp);
+            
+            //0 - O Χρήστης πάτησε ΝΕΟ, Με αυτό τον τρόπο ξέρουμε στο επόμενο παράθυρο εάν 
+            //προερχόμαστε από ΝΕΟ(0) η ΜΕΤΑΒΟΛΗ(1)
+            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(0,em,this,SelectedEmp);
             FORM_EmpMngmntDet.setVisible(true);
             
             
@@ -216,27 +219,26 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
             
             //Ο Χρήστης πάτησε διαγραφή.
             //Οι αλλαγές του θα σωθούν στη βάση.
-            //Έναρξη διαδικασίας ενημέρωσης ΒΔ
-            
-            em.getTransaction().begin();
-            try {
-                //Διαγραφή αντικειμένου απο τη βάση
-                em.remove(SelectedEmp);
-                em.getTransaction().commit();
+            //Έναρξη διαδικασίας ενημέρωσης 
 
-                //Διαγραφή αντικειμένου απο τη λίστα
-                employeeList.remove(SelectedEmp);
-                
-            }catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Δεν μπορεί να γίνει διαγραφή διότι υπάρχει συσχετιζόμενος πίνακας", null, WIDTH, null);
-                em.getTransaction().rollback();
-            }
+            if (JOptionPane.showConfirmDialog(rootPane, "Θέλετε να γίνει διαγραφή;","Προσοχή", JOptionPane.WARNING_MESSAGE ,JOptionPane.YES_NO_OPTION)==0) {
+                em.getTransaction().begin();
+                try {
+                    //Διαγραφή αντικειμένου απο τη βάση
+                    em.remove(SelectedEmp);
+                    em.getTransaction().commit();
+
+                    //Διαγραφή αντικειμένου απο τη λίστα
+                    employeeList.remove(SelectedEmp);
+
+                }catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Δεν μπορεί να γίνει διαγραφή διότι υπάρχει συσχετιζόμενος πίνακας", null, WIDTH, null);
+                    em.getTransaction().rollback();
+                }
+            }    
         } else {
             JOptionPane.showMessageDialog(this, "Επιλέξτε εργαζόμενο", null, WIDTH, null);
         }
-        
-
-
     }//GEN-LAST:event_PBDelActionPerformed
 
     private void PBExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExitActionPerformed
@@ -259,9 +261,11 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         if (TAEmployee.getSelectedRow()>=0) {
             //ο Επιλεγμένος εργαζόμενος από τη λίστα περνάει για επεξεργασία στο επόμενο παράθυρο.
             SelectedEmp = employeeList.get(TAEmployee.getSelectedRow());
-
             //Άνοιγμα παραθύρου επεξεργασίας εργαζομένων
-            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,this,SelectedEmp);
+            
+            //1 - O Χρήστης πάτησε ΜΕΤΑΒΟΛΗ, Με αυτό τον τρόπο ξέρουμε στο επόμενο παράθυρο εάν 
+            //προερχόμαστε από ΝΕΟ(0) η ΜΕΤΑΒΟΛΗ(1)
+            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(1,em,this,SelectedEmp);
             FORM_EmpMngmntDet.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Επιλέξτε εργαζόμενο", null, WIDTH, null);

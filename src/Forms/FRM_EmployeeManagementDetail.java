@@ -1,6 +1,7 @@
 package Forms;
 
 import company.MyWindowEvent;
+import company.Utils;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import static java.awt.image.ImageObserver.WIDTH;
@@ -17,6 +18,7 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     private String Fname;
     private String Emale;
     private Employee Manager;
+    private int prvBtnAct; //o χρήστης πατησε: 0=Νεο , 1=UPDATE
     
     //Ο υπάλληλος που έχει επιλεγεί στην προηγούμενη οθόνη.
     private Employee SelectedEmployee;
@@ -25,10 +27,11 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     JFrame prevwin; //προηγούμενο παράθυρο.
 
     
-    public FRM_EmployeeManagementDetail(EntityManager em, JFrame prevwin, Employee SelectedEmployee) {           
+    public FRM_EmployeeManagementDetail(int prvBtnAct, EntityManager em, JFrame prevwin, Employee SelectedEmployee) {           
         this.em = em;
         this.SelectedEmployee = SelectedEmployee;          
         this.prevwin = prevwin;
+        this.prvBtnAct = prvBtnAct;
         
         //Αποθήκευση τιμών για την περίπτωση που ο χρήστης
         //πατήσει άκυρωση.
@@ -121,9 +124,18 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
         });
 
         org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employeeList, CBManager);
+        jComboBoxBinding.setSourceNullValue(employeeList);
+        jComboBoxBinding.setSourceUnreadableValue(null);
         bindingGroup.addBinding(jComboBoxBinding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employee1, org.jdesktop.beansbinding.ELProperty.create("${managerId}"), CBManager, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        binding.setSourceNullValue(null);
         bindingGroup.addBinding(binding);
+
+        CBManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CBManagerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -213,15 +225,23 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
         //Οι αλλαγές του θα σωθούν στη βάση.
         //Έναρξη διαδικασίας ενημέρωσης ΒΔ
         prevwin.setEnabled(true);
-        em.getTransaction().begin();
+        
+        Utils u = new Utils(em);
+        
+        
+        em.getTransaction().begin();        
         try {       
             //Παρακολούθηση αντικειμένου για να γίνει commit στη βάση
             em.persist(SelectedEmployee);
+            
             em.getTransaction().commit();
         }catch (Exception e) {
             JOptionPane.showMessageDialog(this, e, null, WIDTH, null);
             em.getTransaction().rollback();
         }      
+
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        u.insWorkpermit(SelectedEmployee);
 
         //Κλείσιμο παραθύρου
         //Ενεργοποίηση προηγούμενου παραθύρου        
@@ -233,6 +253,10 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     private void TFSurnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TFSurnameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TFSurnameActionPerformed
+
+    private void CBManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBManagerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CBManagerActionPerformed
 
     /**
      * Μέθοδος για τον έλεγχο του τρόπου κλεισίματος του παραθύρου
