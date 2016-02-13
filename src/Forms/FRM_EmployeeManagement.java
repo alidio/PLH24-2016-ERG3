@@ -1,6 +1,7 @@
 package Forms;
 
 import company.MyWindowEvent;
+import company.Utils;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -13,17 +14,22 @@ import model.*;
 
 public class FRM_EmployeeManagement extends javax.swing.JFrame {
     
+    private JFrame thisframe;//testing
+    
+    
+    
     private JFrame prevwin;
     private EntityManager em;
     private Employee SelectedEmp;
     
     public FRM_EmployeeManagement(EntityManager em, JFrame prevwin) {
         
-        this.prevwin = prevwin;
+        //this.prevwin = prevwin;
+        thisframe = this;
         this.em = em;
-        
+                
         //Κλειδωμα προηγούμενου παραθύρου
-        this.prevwin.setEnabled(false);        
+        //this.prevwin.setEnabled(false);        
         initComponents();
     }
    
@@ -48,7 +54,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         TAEmployee = new javax.swing.JTable();
         PBExit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Εργαζόμενοι");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -166,6 +172,68 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void PBNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBNewActionPerformed
+        SelectedEmp = new Employee(null, "", "", "");        
+        SelectedEmp.setManagerId(null);
+        
+        if (!em.getTransaction().isActive()) {
+            em.getTransaction().begin();
+        }
+        em.persist(SelectedEmp);
+        em.flush();        
+        
+        FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,SelectedEmp);
+        FORM_EmpMngmntDet.setVisible(true);        
+        thisframe.setEnabled(false);
+        
+        FORM_EmpMngmntDet.addWindowListener(
+            new WindowListener(){
+                @Override
+                public void windowClosed(WindowEvent arg0) {
+                    
+                    if (((MyWindowEvent)arg0).exitAndSave) {
+                        
+                        employeeList.add(SelectedEmp);
+                        em.persist(SelectedEmp); 
+                        //Εισάγει τις άδειες που δικαιούται ο κάθε νέος υπάλληλος
+                        Utils u = new Utils(em);
+                        u.insWorkpermit(SelectedEmp);                        
+                        
+                        int row = employeeList.size() - 1;
+                        TAEmployee.setRowSelectionInterval(row, row);
+                        TAEmployee.scrollRectToVisible(TAEmployee.getCellRect(row, 0, true));
+                        
+                    }
+                    else {
+                        
+                        em.remove(SelectedEmp);
+                    }
+                    thisframe.setEnabled(true);
+                    em.getTransaction().commit();
+                }
+
+                @Override
+                public void windowActivated(WindowEvent arg0) {
+                }
+                @Override
+                public void windowClosing(WindowEvent arg0) {
+                }
+                @Override
+                public void windowDeactivated(WindowEvent arg0) {
+                }
+                @Override
+                public void windowDeiconified(WindowEvent arg0) {
+                }
+                @Override
+                public void windowIconified(WindowEvent arg0) {
+                }
+                @Override
+                public void windowOpened(WindowEvent arg0) {
+                }
+            }
+        );
+        
+        
+        /*
             //Άνοιγμα παραθύρου επεξεργασίας εργαζομένων
             SelectedEmp = new Employee();
             employeeList.add(SelectedEmp);
@@ -204,7 +272,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
             public void windowOpened(WindowEvent arg0) {
             }
         });
-        //--------------------------------------------------------------------        
+        */
             
             
             
@@ -214,28 +282,37 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     private void PBDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBDelActionPerformed
         //Εάν έχει επιλεγεί κάποιος από τη λίστα
         if (TAEmployee.getSelectedRow()>=0) {
-            //ο Επιλεγμένος εργαζόμενος από τη λίστα περνάει για επεξεργασία στο επόμενο παράθυρο.
+            //ο Επιλεγμένος εργαζόμενος από τη λίστα
             SelectedEmp = employeeList.get(TAEmployee.getSelectedRow());
-            
+
             //Ο Χρήστης πάτησε διαγραφή.
             //Οι αλλαγές του θα σωθούν στη βάση.
             //Έναρξη διαδικασίας ενημέρωσης 
-
-            if (JOptionPane.showConfirmDialog(rootPane, "Θέλετε να γίνει διαγραφή;","Προσοχή", JOptionPane.WARNING_MESSAGE ,JOptionPane.YES_NO_OPTION)==0) {
-                em.getTransaction().begin();
-                try {
-                    //Διαγραφή αντικειμένου απο τη βάση
-                    em.remove(SelectedEmp);
-                    em.getTransaction().commit();
-
-                    //Διαγραφή αντικειμένου απο τη λίστα
-                    employeeList.remove(SelectedEmp);
-
-                }catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Δεν μπορεί να γίνει διαγραφή διότι υπάρχει συσχετιζόμενος πίνακας", null, WIDTH, null);
-                    em.getTransaction().rollback();
+            
+            //Αρχικοποίηση του Utils για να μπορώ να έχω πρόσβαση στη βιβλιοθήκη 
+            //με τα βοηθητικά προγράμματα
+            Utils u = new Utils(em);
+            
+            //Έλεγχος εάν είναι προϊστάμενος
+            if (u.chkManagerExist(SelectedEmp)) {
+                JOptionPane.showMessageDialog(this, "Δεν μπορεί να γίνει διαγραφή διότι είναι προϊστάμενος", null, WIDTH, null);
+            } else {
+                if (JOptionPane.showConfirmDialog(rootPane, "Θέλετε να γίνει διαγραφή;","Προσοχή", JOptionPane.WARNING_MESSAGE ,JOptionPane.YES_NO_OPTION)==0) {
+                    em.getTransaction().begin();
+                    try {
+                        //Διαγραφή αντικειμένου απο τη λίστα
+                        employeeList.remove(SelectedEmp);
+                        
+                        //Διαγραφή αντικειμένου απο τη βάση
+                        em.persist(SelectedEmp);
+                        em.remove(SelectedEmp);
+                        em.getTransaction().commit();
+                    }catch (Exception e) {
+                        JOptionPane.showMessageDialog(this, e, null, WIDTH, null);
+                        em.getTransaction().rollback();
+                    }
                 }
-            }    
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Επιλέξτε εργαζόμενο", null, WIDTH, null);
         }
@@ -257,6 +334,64 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
 
     private void PBUpdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBUpdActionPerformed
         
+        int s = TAEmployee.getSelectedRow();
+        Employee emp = employeeList.get(s);        
+        FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,SelectedEmp);
+        FORM_EmpMngmntDet.setVisible(true);
+        
+        thisframe = this;
+        thisframe.setEnabled(false);
+        
+        FORM_EmpMngmntDet.addWindowListener(
+            new WindowListener(){
+                @Override
+                public void windowClosed(WindowEvent arg0) {
+                    System.out.println("Window Close event occure"); //---------------------delete!!!!
+                    if (((MyWindowEvent)arg0).exitAndSave) {
+                        System.out.println("exitAndSave");  //---------------------delete!!!!
+                        employeeList.add(SelectedEmp);
+                        TAEmployee.setRowSelectionInterval(s, s);
+                        TAEmployee.scrollRectToVisible(TAEmployee.getCellRect(s, 0, true));
+                        thisframe.setEnabled(true);
+                    }
+                    else {
+                        System.out.println("NOT exitAndSave"); //---------------------delete!!!!
+                        thisframe.setEnabled(true);
+                        em.getTransaction().rollback();
+                        em.getTransaction().begin();
+                        java.util.Collection data = employeeQuery.getResultList();
+                        for (Object entity : data) {
+                            em.refresh(entity);
+                        }
+                        employeeList.clear();
+                        employeeList.addAll(data);
+                    }                    
+                }
+
+                @Override
+                public void windowActivated(WindowEvent arg0) {
+                }
+                @Override
+                public void windowClosing(WindowEvent arg0) {
+                }
+                @Override
+                public void windowDeactivated(WindowEvent arg0) {
+                }
+                @Override
+                public void windowDeiconified(WindowEvent arg0) {
+                }
+                @Override
+                public void windowIconified(WindowEvent arg0) {
+                }
+                @Override
+                public void windowOpened(WindowEvent arg0) {
+                }
+            }
+        );     
+        
+        
+        
+        /* 
         //Εάν έχει επιλεγεί κάποιος από τη λίστα
         if (TAEmployee.getSelectedRow()>=0) {
             //ο Επιλεγμένος εργαζόμενος από τη λίστα περνάει για επεξεργασία στο επόμενο παράθυρο.
@@ -270,6 +405,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Επιλέξτε εργαζόμενο", null, WIDTH, null);
         }
+        */
     }//GEN-LAST:event_PBUpdActionPerformed
 
 

@@ -1,6 +1,7 @@
 package company;
 
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import model.*;
@@ -18,7 +19,9 @@ public class Utils {
     //Employee κατά την καταχωρησή του (Νέος).
     public void insWorkpermit(Employee e){
         
-        em.getTransaction().begin();
+        if (!em.getTransaction().isActive()) {
+            em.getTransaction().begin();
+        }
         try {                  
                        
             List<Workpermittype> WPTList = GetWorkPermitById();
@@ -65,4 +68,23 @@ public class Utils {
 
         return WPList;                     
     }    
+    
+    //Απάντάει εάν υπάρχει ως Manager ο Employee της παραμέτρου
+    public boolean chkManagerExist(Employee emp) {
+        boolean retval=false;
+        
+        //ερωτημα
+        String sqlqry = "select e from Employee e";
+
+        Query qry = em.createQuery(sqlqry, Employee.class);
+
+        //Εκτέλεση ερωτήματος
+        List<Employee> EList = qry.getResultList();
+        
+        for (Employee e:EList){
+            if (Objects.equals(e.getManagerId(), emp)) retval = true;
+        } 
+        
+        return retval;
+    }        
 }

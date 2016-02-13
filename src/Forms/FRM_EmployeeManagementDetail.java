@@ -12,37 +12,12 @@ import model.*;
 
 public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     
-    //Σε περπιπτωση rollback ειστρέφεται το SelectedEmployee στη 
-    //λίστα της προηγούμενης οθόνης χωρίς αλλαγές.
-    private String lname;
-    private String Fname;
-    private String Emale;
-    private Employee Manager;
-    private int prvBtnAct; //o χρήστης πατησε: 0=Νεο , 1=UPDATE
-    
-    //Ο υπάλληλος που έχει επιλεγεί στην προηγούμενη οθόνη.
-    private Employee SelectedEmployee;
-        
+    private Employee SelectedEmployee;        
     private EntityManager em; //Entity manager
-    JFrame prevwin; //προηγούμενο παράθυρο.
 
-    
-    public FRM_EmployeeManagementDetail(int prvBtnAct, EntityManager em, JFrame prevwin, Employee SelectedEmployee) {           
+    public FRM_EmployeeManagementDetail(EntityManager em, Employee SelectedEmployee) {           
         this.em = em;
         this.SelectedEmployee = SelectedEmployee;          
-        this.prevwin = prevwin;
-        this.prvBtnAct = prvBtnAct;
-        
-        //Αποθήκευση τιμών για την περίπτωση που ο χρήστης
-        //πατήσει άκυρωση.
-        lname = this.SelectedEmployee.getLname();
-        Fname = this.SelectedEmployee.getFname();
-        Emale = this.SelectedEmployee.getEmail();
-        Manager = this.SelectedEmployee.getManagerId();        
-        
-        //Κλειδωμα προηγούμενου παραθύρου
-        this.prevwin.setEnabled(false);        
-
         initComponents();
     }
 
@@ -71,7 +46,7 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
         PBCancel = new javax.swing.JButton();
         CBManager = new javax.swing.JComboBox();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         label1.setAlignment(java.awt.Label.CENTER);
         label1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -203,6 +178,14 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void PBCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBCancelActionPerformed
+
+        MyWindowEvent we = new MyWindowEvent(this,WindowEvent.WINDOW_CLOSED,false);
+        for (WindowListener l: this.getWindowListeners()) {
+            l.windowClosed(we);
+        }
+        //this.setVisible(false);        
+        dispose();
+        /*
         //Ο Χρήστης πάτησε ακύρωση.
         //Οι αλλαγές του θα ΔΕΝ θα σωθούν στη βάση.        
         
@@ -218,9 +201,19 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
         
         closeMe(true);
         //dispose();        
+        */
     }//GEN-LAST:event_PBCancelActionPerformed
 
     private void PBSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBSaveActionPerformed
+
+        MyWindowEvent we = new MyWindowEvent(this,WindowEvent.WINDOW_CLOSED,true);
+        for (WindowListener l: this.getWindowListeners()) {
+            l.windowClosed(we);
+        }
+        //this.setVisible(false);
+        dispose();
+
+        /*
         //Ο Χρήστης πάτησε αποθήκευση.
         //Οι αλλαγές του θα σωθούν στη βάση.
         //Έναρξη διαδικασίας ενημέρωσης ΒΔ
@@ -240,13 +233,13 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
             em.getTransaction().rollback();
         }      
 
-        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        //Εισάγει τις άδειες που δικαιούται ο κάθε νέος υπάλληλος
         u.insWorkpermit(SelectedEmployee);
 
         //Κλείσιμο παραθύρου
         //Ενεργοποίηση προηγούμενου παραθύρου        
-        dispose();        
-        
+        dispose();
+        */
         
     }//GEN-LAST:event_PBSaveActionPerformed
 
@@ -257,13 +250,14 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     private void CBManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBManagerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CBManagerActionPerformed
-
+    
     /**
      * Μέθοδος για τον έλεγχο του τρόπου κλεισίματος του παραθύρου
      *
      * @param exitAndSave boolean true for save changes, false for cancel
      * changes
      */
+    /*
     private void closeMe(boolean exitAndSave) {
         MyWindowEvent we = new MyWindowEvent(this, WindowEvent.WINDOW_CLOSED, exitAndSave);
         for (WindowListener l : this.getWindowListeners()) {
@@ -271,7 +265,9 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
         }
         this.setVisible(false);
     }   
-
+    */
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox CBManager;
     private javax.swing.JButton PBCancel;

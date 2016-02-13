@@ -19,20 +19,4 @@ public class MyWindowEvent extends WindowEvent {
         super(source, id);
         this.exitAndSave = exitAndSave;
     }
-
-    public static boolean isExitAndSave(WindowEvent arg0) {
-        String uc;
-         
-        if (arg0.getWindow() instanceof JFrame) {
-            uc = ((JFrame) arg0.getWindow()).getTitle();
-        } else if (arg0.getWindow() instanceof JDialog) {
-            uc = ((JDialog) arg0.getWindow()).getTitle();
-        }
-               
-        if (arg0 instanceof MyWindowEvent) {
-            return ((MyWindowEvent) arg0).exitAndSave;
-        } else {
-            return false;
-        }
-    }
 }
