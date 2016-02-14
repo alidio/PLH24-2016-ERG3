@@ -1,31 +1,14 @@
 package Forms;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import company.DBManager;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JFrame;
 
 public class FRM_Menu extends javax.swing.JFrame {
     private EntityManagerFactory emf;
     private EntityManager em;
 
-    //--------------------------------------------------------------------------
-    //Οι παρακάτω μέθοδοι μας επιτρέπουν να συνδεθούμε με τη βάση δεδομένων της 
-    //εφαρμογής, και να την κατά την είσοδο και έξοδο από την εφαρμογή.
-    //Σε περίπτωση λάθους το μύνημα επιστρέφεται στο exception.
-    private void LoginDataBase() {
-        //Σύνδεση της εφαρμογής με τη βάση δεδομένων
-        try {
-            emf = Persistence.createEntityManagerFactory("companyPU");
-            em = emf.createEntityManager();
-        }
-        catch(Exception exception) {
-            System.err.println(exception.getMessage());
-            System.exit(1);
-        }
-    }
     private void LogoutDataBase() {
         //Αποσύνδεση από τη βάση δεδομένων.
         em.close();
@@ -35,8 +18,8 @@ public class FRM_Menu extends javax.swing.JFrame {
     
     
     public FRM_Menu() {
+        em = DBManager.em;
         initComponents();
-        LoginDataBase();
     }
 
     /**
@@ -208,16 +191,15 @@ public class FRM_Menu extends javax.swing.JFrame {
     private void MNIEmployesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIEmployesActionPerformed
         //Επιλέχθηκε το άνοιγμα της φόρμας διαχ/σης εργαζομένων
         //ανοίγω ένα νέο παράθυρο τύπου FRM_EmployeeManagement στο
-        //οποίο σαν παραμέτρους στέλνω τον EntityManager και το τρέχον παράθυρο
+        //οποίο σαν παραμέτρους στέλνω το τρέχον παράθυρο
         //με σκοπό να μπορώ από τον κώδικα του επόμενου παραθύρου να ελέγχω
-        //τη βάση δεδομένων και την ενεργοποίηση - απενεργοποίηση του τρέχοντος
-        //παραθύρου.
+        //την ενεργοποίηση - απενεργοποίηση του τρέχοντος παραθύρου.
         FRM_EmployeeManagement FORM_EmpMngmnt = new FRM_EmployeeManagement(this);
         FORM_EmpMngmnt.setVisible(true);
     }//GEN-LAST:event_MNIEmployesActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
+        //Αποσύνδεση από τη βάση δεδομένων
         LogoutDataBase();
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
@@ -251,6 +233,7 @@ public class FRM_Menu extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new FRM_Menu().setVisible(true);
             }
