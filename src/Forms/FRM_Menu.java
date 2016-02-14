@@ -12,7 +12,6 @@ public class FRM_Menu extends javax.swing.JFrame {
     private void LogoutDataBase() {
         //Αποσύνδεση από τη βάση δεδομένων.
         em.close();
-        emf.close();
     }    
     //--------------------------------------------------------------------------
     
