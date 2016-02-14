@@ -212,7 +212,7 @@ public class FRM_Menu extends javax.swing.JFrame {
         //με σκοπό να μπορώ από τον κώδικα του επόμενου παραθύρου να ελέγχω
         //τη βάση δεδομένων και την ενεργοποίηση - απενεργοποίηση του τρέχοντος
         //παραθύρου.
-        FRM_EmployeeManagement FORM_EmpMngmnt = new FRM_EmployeeManagement(em,this);
+        FRM_EmployeeManagement FORM_EmpMngmnt = new FRM_EmployeeManagement(this);
         FORM_EmpMngmnt.setVisible(true);
     }//GEN-LAST:event_MNIEmployesActionPerformed
 

@@ -11,8 +11,8 @@ public class Utils {
     private EntityManager em; //Entity manager
 
    
-    public Utils(EntityManager em){
-        this.em = em;
+    public Utils(){
+        this.em = DBManager.em;
     }
     
     //Η μέθοδος εισάγει τις ημέρες άδειας που δικαιούται ο 
@@ -87,4 +87,18 @@ public class Utils {
         
         return retval;
     }        
+
+    
+    //Διαγράφει τις άδειες που δικαιούται ο Empoloyee 
+    //έστι ωστε να μποεί να διαγραφεί και ο ίδιος μετά
+    public void delEmployeeWorkPermit(Employee emp) {
+        
+        Query query = em.createQuery("DELETE FROM Availableworkpermit a WHERE a.employeeId = :emp");
+        int deletedCount = query.setParameter("emp", emp).executeUpdate();        
+        
+        System.out.println("deletedCount="+deletedCount);
+        
+
+    }            
+    
 }

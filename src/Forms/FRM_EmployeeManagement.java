@@ -1,35 +1,27 @@
 package Forms;
 
+import company.DBManager;
 import company.MyWindowEvent;
 import company.Utils;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.YES_NO_OPTION;
-import model.*;
+import model.Employee;
 
 public class FRM_EmployeeManagement extends javax.swing.JFrame {
     
-    private JFrame thisframe;//testing
-    
-    
-    
-    private JFrame prevwin;
+    private JFrame thisframe;  //Αυτό το παράθυρο (Χρήση στον listener)
+    private JFrame prevwin; //Προηγούμενο παράθυρο για επιστροφή στο menu
     private EntityManager em;
-    private Employee SelectedEmp;
-    
-    public FRM_EmployeeManagement(EntityManager em, JFrame prevwin) {
-        
-        //this.prevwin = prevwin;
+   
+    public FRM_EmployeeManagement(JFrame prevwin) {
+      
+        this.prevwin = prevwin;
         thisframe = this;
-        this.em = em;
-                
-        //Κλειδωμα προηγούμενου παραθύρου
-        //this.prevwin.setEnabled(false);        
+        this.em = DBManager.em;                
+
         initComponents();
     }
    
@@ -172,43 +164,44 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void PBNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBNewActionPerformed
-        SelectedEmp = new Employee(null, "", "", "");        
-        SelectedEmp.setManagerId(null);
         
+        //Αρχικοποίηση επικοινωνίας με την DB
         if (!em.getTransaction().isActive()) {
             em.getTransaction().begin();
         }
-        em.persist(SelectedEmp);
-        em.flush();        
         
-        FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,SelectedEmp);
+        //Ο πρός καταχώρηση EMPLOYEE
+        Employee emp = new Employee();
+        //Προστίθεται στην γραμμή του listbox
+        employeeList.add(emp);
+        FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(emp);
         FORM_EmpMngmntDet.setVisible(true);        
         thisframe.setEnabled(false);
-        
+
         FORM_EmpMngmntDet.addWindowListener(
             new WindowListener(){
                 @Override
                 public void windowClosed(WindowEvent arg0) {
                     
                     if (((MyWindowEvent)arg0).exitAndSave) {
+                        //Επιστροφή για αποθήκευση
+                        thisframe.setEnabled(true);                       
                         
-                        employeeList.add(SelectedEmp);
-                        em.persist(SelectedEmp); 
+                        //Διαβάζω τον Employee που καταχώρησε ο χρήστης
+                        Employee insEmp = employeeList.get(employeeList.size() - 1);                        
+                        //Καταχώρηση στη βάση
+                        em.persist(insEmp);
+                        em.getTransaction().commit();
                         //Εισάγει τις άδειες που δικαιούται ο κάθε νέος υπάλληλος
-                        Utils u = new Utils(em);
-                        u.insWorkpermit(SelectedEmp);                        
-                        
-                        int row = employeeList.size() - 1;
-                        TAEmployee.setRowSelectionInterval(row, row);
-                        TAEmployee.scrollRectToVisible(TAEmployee.getCellRect(row, 0, true));
-                        
+                        Utils u = new Utils();
+                        u.insWorkpermit(insEmp);
                     }
                     else {
-                        
-                        em.remove(SelectedEmp);
+                        //Επιστροφή με ακύρωση
+                        thisframe.setEnabled(true);
+                        //Αφαιρέίται από τη λίστα η γραμμή που προστέθηκε
+                        employeeList.remove(employeeList.size() - 1);
                     }
-                    thisframe.setEnabled(true);
-                    em.getTransaction().commit();
                 }
 
                 @Override
@@ -228,85 +221,43 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                 }
                 @Override
                 public void windowOpened(WindowEvent arg0) {
-                }
+                } 
             }
         );
-        
-        
-        /*
-            //Άνοιγμα παραθύρου επεξεργασίας εργαζομένων
-            SelectedEmp = new Employee();
-            employeeList.add(SelectedEmp);
-            
-            //0 - O Χρήστης πάτησε ΝΕΟ, Με αυτό τον τρόπο ξέρουμε στο επόμενο παράθυρο εάν 
-            //προερχόμαστε από ΝΕΟ(0) η ΜΕΤΑΒΟΛΗ(1)
-            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(0,em,this,SelectedEmp);
-            FORM_EmpMngmntDet.setVisible(true);
-            
-            
-            //--------------------------------------------------------------------
-            FORM_EmpMngmntDet.addWindowListener(new WindowListener() {
-            @Override
-            public void windowClosed(WindowEvent arg0) {
-
-                if (MyWindowEvent.isExitAndSave(arg0)) {
-                    employeeList.remove(SelectedEmp);
-                }
-            }
-            @Override
-            public void windowActivated(WindowEvent arg0) {
-            }
-            @Override
-            public void windowClosing(WindowEvent arg0) {
-            }
-            @Override
-            public void windowDeactivated(WindowEvent arg0) {
-            }
-            @Override
-            public void windowDeiconified(WindowEvent arg0) {
-            }
-            @Override
-            public void windowIconified(WindowEvent arg0) {
-            }
-            @Override
-            public void windowOpened(WindowEvent arg0) {
-            }
-        });
-        */
-            
-            
-            
-            
     }//GEN-LAST:event_PBNewActionPerformed
 
     private void PBDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBDelActionPerformed
         //Εάν έχει επιλεγεί κάποιος από τη λίστα
         if (TAEmployee.getSelectedRow()>=0) {
             //ο Επιλεγμένος εργαζόμενος από τη λίστα
-            SelectedEmp = employeeList.get(TAEmployee.getSelectedRow());
+            Employee emp = employeeList.get(TAEmployee.getSelectedRow());
 
             //Ο Χρήστης πάτησε διαγραφή.
             //Οι αλλαγές του θα σωθούν στη βάση.
-            //Έναρξη διαδικασίας ενημέρωσης 
             
-            //Αρχικοποίηση του Utils για να μπορώ να έχω πρόσβαση στη βιβλιοθήκη 
+            //Αρχικοποίηση του Utils για να μπορώ να έχω πρόσβαση στη βιβλιοθήκη
             //με τα βοηθητικά προγράμματα
-            Utils u = new Utils(em);
+            Utils u = new Utils();
             
             //Έλεγχος εάν είναι προϊστάμενος
-            if (u.chkManagerExist(SelectedEmp)) {
+            if (u.chkManagerExist(emp)) {
                 JOptionPane.showMessageDialog(this, "Δεν μπορεί να γίνει διαγραφή διότι είναι προϊστάμενος", null, WIDTH, null);
             } else {
-                if (JOptionPane.showConfirmDialog(rootPane, "Θέλετε να γίνει διαγραφή;","Προσοχή", JOptionPane.WARNING_MESSAGE ,JOptionPane.YES_NO_OPTION)==0) {
-                    em.getTransaction().begin();
+                if (JOptionPane.showConfirmDialog(rootPane, "Θέλετε να γίνει διαγραφή; ","Προσοχή", JOptionPane.WARNING_MESSAGE ,JOptionPane.YES_NO_OPTION)==0) {                                        
+                    if (!em.getTransaction().isActive()) {
+                        em.getTransaction().begin();
+                    }
                     try {
                         //Διαγραφή αντικειμένου απο τη λίστα
-                        employeeList.remove(SelectedEmp);
+                        employeeList.remove(emp);
+
+                        //Διαγραφή από τη βάση των αδειών που δικαιούται.
+                        u.delEmployeeWorkPermit(emp);
                         
                         //Διαγραφή αντικειμένου απο τη βάση
-                        em.persist(SelectedEmp);
-                        em.remove(SelectedEmp);
-                        em.getTransaction().commit();
+                        em.persist(emp);
+                        em.remove(emp);
+                        em.getTransaction().commit();                        
                     }catch (Exception e) {
                         JOptionPane.showMessageDialog(this, e, null, WIDTH, null);
                         em.getTransaction().rollback();
@@ -333,79 +284,74 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void PBUpdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBUpdActionPerformed
-        
-        int s = TAEmployee.getSelectedRow();
-        Employee emp = employeeList.get(s);        
-        FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(em,SelectedEmp);
-        FORM_EmpMngmntDet.setVisible(true);
-        
-        thisframe = this;
-        thisframe.setEnabled(false);
-        
-        FORM_EmpMngmntDet.addWindowListener(
-            new WindowListener(){
-                @Override
-                public void windowClosed(WindowEvent arg0) {
-                    System.out.println("Window Close event occure"); //---------------------delete!!!!
-                    if (((MyWindowEvent)arg0).exitAndSave) {
-                        System.out.println("exitAndSave");  //---------------------delete!!!!
-                        employeeList.add(SelectedEmp);
-                        TAEmployee.setRowSelectionInterval(s, s);
-                        TAEmployee.scrollRectToVisible(TAEmployee.getCellRect(s, 0, true));
-                        thisframe.setEnabled(true);
-                    }
-                    else {
-                        System.out.println("NOT exitAndSave"); //---------------------delete!!!!
-                        thisframe.setEnabled(true);
-                        em.getTransaction().rollback();
-                        em.getTransaction().begin();
-                        java.util.Collection data = employeeQuery.getResultList();
-                        for (Object entity : data) {
-                            em.refresh(entity);
-                        }
-                        employeeList.clear();
-                        employeeList.addAll(data);
-                    }                    
-                }
-
-                @Override
-                public void windowActivated(WindowEvent arg0) {
-                }
-                @Override
-                public void windowClosing(WindowEvent arg0) {
-                }
-                @Override
-                public void windowDeactivated(WindowEvent arg0) {
-                }
-                @Override
-                public void windowDeiconified(WindowEvent arg0) {
-                }
-                @Override
-                public void windowIconified(WindowEvent arg0) {
-                }
-                @Override
-                public void windowOpened(WindowEvent arg0) {
-                }
-            }
-        );     
-        
-        
-        
-        /* 
         //Εάν έχει επιλεγεί κάποιος από τη λίστα
-        if (TAEmployee.getSelectedRow()>=0) {
-            //ο Επιλεγμένος εργαζόμενος από τη λίστα περνάει για επεξεργασία στο επόμενο παράθυρο.
-            SelectedEmp = employeeList.get(TAEmployee.getSelectedRow());
-            //Άνοιγμα παραθύρου επεξεργασίας εργαζομένων
-            
-            //1 - O Χρήστης πάτησε ΜΕΤΑΒΟΛΗ, Με αυτό τον τρόπο ξέρουμε στο επόμενο παράθυρο εάν 
-            //προερχόμαστε από ΝΕΟ(0) η ΜΕΤΑΒΟΛΗ(1)
-            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(1,em,this,SelectedEmp);
-            FORM_EmpMngmntDet.setVisible(true);
-        } else {
+        if (TAEmployee.getSelectedRow()<0) {        
             JOptionPane.showMessageDialog(this, "Επιλέξτε εργαζόμενο", null, WIDTH, null);
+        }else {
+            //Διαβάζω τον Employee που επέλεξε ο χρήστης
+            Employee emp = employeeList.get(TAEmployee.getSelectedRow());                
+            
+            if (!em.getTransaction().isActive()) {
+                em.getTransaction().begin();
+            }
+            em.persist(emp);
+            
+            FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(emp);
+            FORM_EmpMngmntDet.setVisible(true);     
+            thisframe.setEnabled(false);
+
+            FORM_EmpMngmntDet.addWindowListener(
+                new WindowListener(){
+                    @Override
+                    public void windowClosed(WindowEvent arg0) {
+                        if (((MyWindowEvent)arg0).exitAndSave) {
+                            //ενεργοποίηση του παραθύρου
+                            thisframe.setEnabled(true);
+                            
+                            //Καταχώρηση στη βάση
+                            em.getTransaction().commit();
+                        }
+                        else {
+                            //ενεργοποίηση του παραθύρου
+                            thisframe.setEnabled(true);                                      
+
+                            //Ακύρωση της συναλλαγής με τη βάση
+                            em.getTransaction().rollback();
+                            
+                            //Έχει πατηθεί άκυρο
+                            //Εμφάνιση στη λίστα ότι έχει η βάση.
+                            em.getTransaction().begin();
+                            java.util.Collection data = employeeQuery.getResultList();
+                            for (Object entity : data) {
+                                em.refresh(entity);
+                            }
+                            employeeList.clear();
+                            employeeList.addAll(data);
+                        }                    
+                    }
+
+                    @Override
+                    public void windowActivated(WindowEvent arg0) {
+                    }
+                    @Override
+                    public void windowClosing(WindowEvent arg0) {
+                    }
+                    @Override
+                    public void windowDeactivated(WindowEvent arg0) {
+                    }
+                    @Override
+                    public void windowDeiconified(WindowEvent arg0) {
+                    }
+                    @Override
+                    public void windowIconified(WindowEvent arg0) {
+                    }
+                    @Override
+                    public void windowOpened(WindowEvent arg0) {
+                    }
+                }        
+            );  
+        
         }
-        */
     }//GEN-LAST:event_PBUpdActionPerformed
 
 

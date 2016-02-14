@@ -1,13 +1,10 @@
 package Forms;
 
+import company.DBManager;
 import company.MyWindowEvent;
-import company.Utils;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import static java.awt.image.ImageObserver.WIDTH;
 import javax.persistence.EntityManager;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import model.*;
 
 public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
@@ -15,8 +12,8 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     private Employee SelectedEmployee;        
     private EntityManager em; //Entity manager
 
-    public FRM_EmployeeManagementDetail(EntityManager em, Employee SelectedEmployee) {           
-        this.em = em;
+    public FRM_EmployeeManagementDetail(Employee SelectedEmployee) {
+        this.em = DBManager.em;
         this.SelectedEmployee = SelectedEmployee;          
         initComponents();
     }
@@ -178,69 +175,19 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void PBCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBCancelActionPerformed
-
         MyWindowEvent we = new MyWindowEvent(this,WindowEvent.WINDOW_CLOSED,false);
         for (WindowListener l: this.getWindowListeners()) {
             l.windowClosed(we);
         }
-        //this.setVisible(false);        
-        dispose();
-        /*
-        //Ο Χρήστης πάτησε ακύρωση.
-        //Οι αλλαγές του θα ΔΕΝ θα σωθούν στη βάση.        
-        
-        //Επαναφορά των τιμών πρίν τις αλλαγές του χρήστη.
-        this.SelectedEmployee.setLname(lname);
-        this.SelectedEmployee.setFname(Fname);
-        this.SelectedEmployee.setEmail(Emale);
-        this.SelectedEmployee.setManagerId(Manager);
-        
-        //Κλείσιμο παραθύρου
-        //Ενεργοποίηση προηγούμενου παραθύρου
-        prevwin.setEnabled(true);
-        
-        closeMe(true);
-        //dispose();        
-        */
+        this.setVisible(false);        
     }//GEN-LAST:event_PBCancelActionPerformed
 
     private void PBSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBSaveActionPerformed
-
         MyWindowEvent we = new MyWindowEvent(this,WindowEvent.WINDOW_CLOSED,true);
         for (WindowListener l: this.getWindowListeners()) {
             l.windowClosed(we);
         }
-        //this.setVisible(false);
-        dispose();
-
-        /*
-        //Ο Χρήστης πάτησε αποθήκευση.
-        //Οι αλλαγές του θα σωθούν στη βάση.
-        //Έναρξη διαδικασίας ενημέρωσης ΒΔ
-        prevwin.setEnabled(true);
-        
-        Utils u = new Utils(em);
-        
-        
-        em.getTransaction().begin();        
-        try {       
-            //Παρακολούθηση αντικειμένου για να γίνει commit στη βάση
-            em.persist(SelectedEmployee);
-            
-            em.getTransaction().commit();
-        }catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e, null, WIDTH, null);
-            em.getTransaction().rollback();
-        }      
-
-        //Εισάγει τις άδειες που δικαιούται ο κάθε νέος υπάλληλος
-        u.insWorkpermit(SelectedEmployee);
-
-        //Κλείσιμο παραθύρου
-        //Ενεργοποίηση προηγούμενου παραθύρου        
-        dispose();
-        */
-        
+        this.setVisible(false);
     }//GEN-LAST:event_PBSaveActionPerformed
 
     private void TFSurnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TFSurnameActionPerformed
@@ -250,23 +197,7 @@ public class FRM_EmployeeManagementDetail extends javax.swing.JFrame {
     private void CBManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBManagerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CBManagerActionPerformed
-    
-    /**
-     * Μέθοδος για τον έλεγχο του τρόπου κλεισίματος του παραθύρου
-     *
-     * @param exitAndSave boolean true for save changes, false for cancel
-     * changes
-     */
-    /*
-    private void closeMe(boolean exitAndSave) {
-        MyWindowEvent we = new MyWindowEvent(this, WindowEvent.WINDOW_CLOSED, exitAndSave);
-        for (WindowListener l : this.getWindowListeners()) {
-            l.windowClosed(we);
-        }
-        this.setVisible(false);
-    }   
-    */
-    
+          
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox CBManager;
