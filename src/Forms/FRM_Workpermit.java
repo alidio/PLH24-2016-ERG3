@@ -1,6 +1,7 @@
 package Forms;
 
 import company.DBManager;
+import company.Utils;
 import javax.persistence.EntityManager;
 import javax.swing.JFrame;
 
@@ -39,8 +40,14 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         PBStartSim = new javax.swing.JButton();
         PBExtractXML = new javax.swing.JButton();
         PBExit = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -48,13 +55,10 @@ public class FRM_Workpermit extends javax.swing.JFrame {
 
         TBSyg.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPane1.setViewportView(TBSyg);
@@ -96,6 +100,13 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("test");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -119,6 +130,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(321, 321, 321)
                 .addComponent(PBExit)
                 .addContainerGap())
         );
@@ -140,7 +153,9 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                     .addComponent(PBStartSim)
                     .addComponent(PBExtractXML))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                .addComponent(PBExit)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(PBExit)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -157,6 +172,18 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private void PBStartSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStartSimActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_PBStartSimActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        //Κλείσιμο παραθύρου
+        //Ενεργοποίηση προηγούμενου παραθύρου
+        prevwin.setEnabled(true);
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Utils u = new Utils();
+        u.test();
+    }//GEN-LAST:event_jButton1ActionPerformed
     
     
     /**
@@ -202,6 +229,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private javax.swing.JButton PBStartSim;
     private javax.swing.JTable TBAnal;
     private javax.swing.JTable TBSyg;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -390,15 +390,15 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton PBDel;
-    private javax.swing.JButton PBExit;
-    private javax.swing.JButton PBNew;
-    private javax.swing.JButton PBUpd;
-    private javax.swing.JScrollPane SPEmployes;
-    private javax.swing.JTable TAEmployee;
+    javax.swing.JButton PBDel;
+    javax.swing.JButton PBExit;
+    javax.swing.JButton PBNew;
+    javax.swing.JButton PBUpd;
+    javax.swing.JScrollPane SPEmployes;
+    javax.swing.JTable TAEmployee;
     private java.util.List<model.Employee> employeeList;
-    private javax.persistence.Query employeeQuery;
-    private java.awt.Label label2;
+    javax.persistence.Query employeeQuery;
+    java.awt.Label label2;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

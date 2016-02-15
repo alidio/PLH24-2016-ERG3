@@ -94,11 +94,30 @@ public class Utils {
     public void delEmployeeWorkPermit(Employee emp) {
         
         Query query = em.createQuery("DELETE FROM Availableworkpermit a WHERE a.employeeId = :emp");
-        int deletedCount = query.setParameter("emp", emp).executeUpdate();        
-        
-        System.out.println("deletedCount="+deletedCount);
-        
+        int deletedCount = query.setParameter("emp", emp).executeUpdate();               
 
     }            
+    
+    //Διαγράφει τις άδειες που δικαιούται ο Empoloyee 
+    //έστι ωστε να μποεί να διαγραφεί και ο ίδιος μετά
+    public void test() {
+System.out.println("In Test");        
+       //ερωτημα
+        String sqlqry = "select e from Employee e, Workpermit w "
+                + "where w.employeeId = e";
+
+        Query qry = em.createQuery(sqlqry, Employee.class);
+
+        //Εκτέλεση ερωτήματος
+        List<Employee> EList = qry.getResultList();
+        
+        for (Employee e:EList){
+            System.out.println("Employee e="+e);
+        } 
+        
+
+        
+
+    }                
     
 }
