@@ -20,8 +20,10 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
       
         this.prevwin = prevwin;
         thisframe = this;
-        this.em = DBManager.em;                
-
+        this.em = DBManager.em;
+        
+        this.prevwin.setEnabled(false);
+        
         initComponents();
     }
    
@@ -185,7 +187,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
                     
                     if (((MyWindowEvent)arg0).exitAndSave) {
                         //Επιστροφή για αποθήκευση
-                        thisframe.setEnabled(true);                       
+                        thisframe.setEnabled(true);
                         
                         //Διαβάζω τον Employee που καταχώρησε ο χρήστης
                         Employee insEmp = employeeList.get(employeeList.size() - 1);                        
@@ -285,11 +287,11 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
 
     private void PBUpdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBUpdActionPerformed
         //Εάν έχει επιλεγεί κάποιος από τη λίστα
-        if (TAEmployee.getSelectedRow()<0) {        
+        if (TAEmployee.getSelectedRow()<0) {
             JOptionPane.showMessageDialog(this, "Επιλέξτε εργαζόμενο", null, WIDTH, null);
         }else {
             //Διαβάζω τον Employee που επέλεξε ο χρήστης
-            Employee emp = employeeList.get(TAEmployee.getSelectedRow());                
+            Employee emp = employeeList.get(TAEmployee.getSelectedRow());
             
             if (!em.getTransaction().isActive()) {
                 em.getTransaction().begin();
@@ -297,7 +299,7 @@ public class FRM_EmployeeManagement extends javax.swing.JFrame {
             em.persist(emp);
             
             FRM_EmployeeManagementDetail FORM_EmpMngmntDet = new FRM_EmployeeManagementDetail(emp);
-            FORM_EmpMngmntDet.setVisible(true);     
+            FORM_EmpMngmntDet.setVisible(true);
             thisframe.setEnabled(false);
 
             FORM_EmpMngmntDet.addWindowListener(

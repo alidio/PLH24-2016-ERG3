@@ -184,7 +184,13 @@ public class FRM_Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_MNIExitActionPerformed
 
     private void MNIWorkPermitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIWorkPermitActionPerformed
-        // TODO add your handling code here:
+   //Επιλέχθηκε το άνοιγμα της φόρμας διαχ/σης εργαζομένων
+        //ανοίγω ένα νέο παράθυρο τύπου FRM_EmployeeManagement στο
+        //οποίο σαν παραμέτρους στέλνω το τρέχον παράθυρο
+        //με σκοπό να μπορώ από τον κώδικα του επόμενου παραθύρου να ελέγχω
+        //την ενεργοποίηση - απενεργοποίηση του τρέχοντος παραθύρου.
+        FRM_Workpermit FORM_WpMngmnt = new FRM_Workpermit(this);
+        FORM_WpMngmnt.setVisible(true);
     }//GEN-LAST:event_MNIWorkPermitActionPerformed
 
     private void MNIEmployesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIEmployesActionPerformed
