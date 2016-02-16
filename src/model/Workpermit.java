@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -20,6 +22,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -37,6 +40,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Workpermit.findByNumdays", query = "SELECT w FROM Workpermit w WHERE w.numdays = :numdays"),
     @NamedQuery(name = "Workpermit.findByApproved", query = "SELECT w FROM Workpermit w WHERE w.approved = :approved")})
 public class Workpermit implements Serializable {
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,7 +87,9 @@ public class Workpermit implements Serializable {
     }
 
     public void setWorkPermitId(Long workPermitId) {
+        Long oldWorkPermitId = this.workPermitId;
         this.workPermitId = workPermitId;
+        changeSupport.firePropertyChange("workPermitId", oldWorkPermitId, workPermitId);
     }
 
     public Date getFromdate() {
@@ -90,7 +97,9 @@ public class Workpermit implements Serializable {
     }
 
     public void setFromdate(Date fromdate) {
+        Date oldFromdate = this.fromdate;
         this.fromdate = fromdate;
+        changeSupport.firePropertyChange("fromdate", oldFromdate, fromdate);
     }
 
     public Date getTodate() {
@@ -98,7 +107,9 @@ public class Workpermit implements Serializable {
     }
 
     public void setTodate(Date todate) {
+        Date oldTodate = this.todate;
         this.todate = todate;
+        changeSupport.firePropertyChange("todate", oldTodate, todate);
     }
 
     public int getNumdays() {
@@ -106,7 +117,9 @@ public class Workpermit implements Serializable {
     }
 
     public void setNumdays(int numdays) {
+        int oldNumdays = this.numdays;
         this.numdays = numdays;
+        changeSupport.firePropertyChange("numdays", oldNumdays, numdays);
     }
 
     public Integer getApproved() {
@@ -114,7 +127,9 @@ public class Workpermit implements Serializable {
     }
 
     public void setApproved(Integer approved) {
+        Integer oldApproved = this.approved;
         this.approved = approved;
+        changeSupport.firePropertyChange("approved", oldApproved, approved);
     }
 
     public Employee getEmployeeId() {
@@ -122,7 +137,9 @@ public class Workpermit implements Serializable {
     }
 
     public void setEmployeeId(Employee employeeId) {
+        Employee oldEmployeeId = this.employeeId;
         this.employeeId = employeeId;
+        changeSupport.firePropertyChange("employeeId", oldEmployeeId, employeeId);
     }
 
     public Workpermittype getWorkPermitTypeId() {
@@ -130,7 +147,9 @@ public class Workpermit implements Serializable {
     }
 
     public void setWorkPermitTypeId(Workpermittype workPermitTypeId) {
+        Workpermittype oldWorkPermitTypeId = this.workPermitTypeId;
         this.workPermitTypeId = workPermitTypeId;
+        changeSupport.firePropertyChange("workPermitTypeId", oldWorkPermitTypeId, workPermitTypeId);
     }
 
     @Override
@@ -156,6 +175,14 @@ public class Workpermit implements Serializable {
     @Override
     public String toString() {
         return "model.Workpermit[ workPermitId=" + workPermitId + " ]";
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,6 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Availableworkpermit.findByAvailableworkpermitId", query = "SELECT a FROM Availableworkpermit a WHERE a.availableworkpermitId = :availableworkpermitId"),
     @NamedQuery(name = "Availableworkpermit.findByAvailableDays", query = "SELECT a FROM Availableworkpermit a WHERE a.availableDays = :availableDays")})
 public class Availableworkpermit implements Serializable {
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +69,9 @@ public class Availableworkpermit implements Serializable {
     }
 
     public void setAvailableworkpermitId(Long availableworkpermitId) {
+        Long oldAvailableworkpermitId = this.availableworkpermitId;
         this.availableworkpermitId = availableworkpermitId;
+        changeSupport.firePropertyChange("availableworkpermitId", oldAvailableworkpermitId, availableworkpermitId);
     }
 
     public int getAvailableDays() {
@@ -72,7 +79,9 @@ public class Availableworkpermit implements Serializable {
     }
 
     public void setAvailableDays(int availableDays) {
+        int oldAvailableDays = this.availableDays;
         this.availableDays = availableDays;
+        changeSupport.firePropertyChange("availableDays", oldAvailableDays, availableDays);
     }
 
     public Employee getEmployeeId() {
@@ -80,7 +89,9 @@ public class Availableworkpermit implements Serializable {
     }
 
     public void setEmployeeId(Employee employeeId) {
+        Employee oldEmployeeId = this.employeeId;
         this.employeeId = employeeId;
+        changeSupport.firePropertyChange("employeeId", oldEmployeeId, employeeId);
     }
 
     public Workpermittype getWorkPermitTypeId() {
@@ -88,7 +99,9 @@ public class Availableworkpermit implements Serializable {
     }
 
     public void setWorkPermitTypeId(Workpermittype workPermitTypeId) {
+        Workpermittype oldWorkPermitTypeId = this.workPermitTypeId;
         this.workPermitTypeId = workPermitTypeId;
+        changeSupport.firePropertyChange("workPermitTypeId", oldWorkPermitTypeId, workPermitTypeId);
     }
 
     @Override
@@ -114,6 +127,14 @@ public class Availableworkpermit implements Serializable {
     @Override
     public String toString() {
         return "model.Availableworkpermit[ availableworkpermitId=" + availableworkpermitId + " ]";
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }
