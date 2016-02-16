@@ -1,5 +1,6 @@
 package company;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.EntityManager;
@@ -101,20 +102,19 @@ public class Utils {
     //Διαγράφει τις άδειες που δικαιούται ο Empoloyee 
     //έστι ωστε να μποεί να διαγραφεί και ο ίδιος μετά
     public void test() {
-System.out.println("In Test");        
-       //ερωτημα
-        String sqlqry = "select e from Employee e, Workpermit w "
-                + "where w.employeeId = e";
+        
+        System.out.println("In Test");        
+        //ερωτημα
+        String sqlqry = "";
 
-        Query qry = em.createQuery(sqlqry, Employee.class);
+        Query qry = em.createQuery("select sum(w.numdays) as aaa from Workpermit w where w.approved=0 group by w.employeeId");
 
         //Εκτέλεση ερωτήματος
-        List<Employee> EList = qry.getResultList();
+        Iterator <Long> bResults = qry.getResultList().iterator();
         
-        for (Employee e:EList){
-            System.out.println("Employee e="+e);
+        while (bResults.hasNext()){
+            System.out.println(bResults.next());
         } 
-        
 
         
 

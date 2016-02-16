@@ -29,7 +29,10 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        QRYSyg = java.beans.Beans.isDesignTime() ? null : em.createQuery("select sum(w.numdays) as sday0 from Workpermit w where w.approved is null group by w.employeeId");
+        LSTSyg = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(QRYSyg.getResultList());
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TBSyg = new javax.swing.JTable();
@@ -61,6 +64,10 @@ public class FRM_Workpermit extends javax.swing.JFrame {
 
             }
         ));
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, LSTSyg, org.jdesktop.beansbinding.ELProperty.create("${}"), TBSyg, org.jdesktop.beansbinding.BeanProperty.create("selectedElements"));
+        bindingGroup.addBinding(binding);
+
         jScrollPane1.setViewportView(TBSyg);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -159,6 +166,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -224,9 +233,11 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.util.List LSTSyg;
     private javax.swing.JButton PBExit;
     private javax.swing.JButton PBExtractXML;
     private javax.swing.JButton PBStartSim;
+    private javax.persistence.Query QRYSyg;
     private javax.swing.JTable TBAnal;
     private javax.swing.JTable TBSyg;
     private javax.swing.JButton jButton1;
@@ -235,5 +246,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
