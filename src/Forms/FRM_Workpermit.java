@@ -2,8 +2,11 @@ package Forms;
 
 import company.DBManager;
 import company.Utils;
+import java.io.File;
 import javax.persistence.EntityManager;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class FRM_Workpermit extends javax.swing.JFrame {
     
@@ -94,6 +97,11 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         });
 
         PBExtractXML.setText("Εξαγωγή αιτημάτων σε XML");
+        PBExtractXML.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PBExtractXMLActionPerformed(evt);
+            }
+        });
 
         PBExit.setText("Έξοδος");
         PBExit.addActionListener(new java.awt.event.ActionListener() {
@@ -190,6 +198,60 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         Utils u = new Utils();
         u.test();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void PBExtractXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExtractXMLActionPerformed
+        
+        int selectedRow = TBSyg.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "ExportPlayListIsNotSelected", "NoRecordIsSelected",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            selectedRow = TBSyg.convertRowIndexToModel(selectedRow);
+            playList = playListList.get(selectedRow);
+
+            //Δημιουργούμε παράθυρο επιλογέα αρχείου
+            JFileChooser chooser = new JFileChooser();
+            //Φιλτράρουμε ώστε ο τύπος αρχείου να είναι μόνο xml
+            XMLFileFilter fileFilterXML = new XMLFileFilter();
+            chooser.setFileFilter(fileFilterXML);
+
+            //ο τύπος του παραθύρου να είναι αποθήκευσης
+            int selection = chooser.showSaveDialog(this);
+
+            //Εάν επιλέχθηκε Αποθήκευση
+            if (selection == JFileChooser.APPROVE_OPTION) {
+
+                //το όνομα που δόθηκε στο αρχείο
+                File selectedFile = chooser.getSelectedFile();
+
+                if (selectedFile != null) {
+                    //Το αρχείο να έχει .xml extension
+                    if (!selectedFile.getName().toLowerCase().endsWith(".xml")) {
+                        selectedFile = new File(selectedFile + ".xml");
+                    }
+                    //Εάν το όνομα του αρχείου υπάρχει ήδη στην επιλεγμένη τοποθεσία για αποθήκευση
+                    if (selectedFile.exists()) {
+                        int confirm = JOptionPane.showConfirmDialog(this,"FileAlreadyExists","Replace", 
+                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                        if (confirm != JOptionPane.YES_OPTION) {
+                            return;
+                        }
+                    }
+
+                    if (loggerUtil.isDebugEnabled()) {
+                        loggerUtil.debug("Exporting PlayList: " + playList.getIdPlayList()
+                                + " to XML with filename: " + selectedFile.getName());
+                    }
+                    //Κάνουμε παραγωγή και εξαγωγή του XML αρχείου
+                    controller.exportPlayListToXML(playList, selectedFile);
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "FileDefExportError", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_PBExtractXMLActionPerformed
     
     
     /**

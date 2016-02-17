@@ -192,6 +192,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x395;&#x3be;&#x3b1;&#x3b3;&#x3c9;&#x3b3;&#x3ae; &#x3b1;&#x3b9;&#x3c4;&#x3b7;&#x3bc;&#x3ac;&#x3c4;&#x3c9;&#x3bd; &#x3c3;&#x3b5; XML"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PBExtractXMLActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="PBExit">
       <Properties>
