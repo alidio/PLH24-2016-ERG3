@@ -31,8 +31,12 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        workpermitQuery = java.beans.Beans.isDesignTime() ? null : em.createQuery("SELECT e.lname, e.fname, e.email, sum(w.numdays)  from Employee e, Workpermit w group by e, w ");
-        workpermitList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(workpermitQuery.getResultList());
+        QRYWorkPermitSyg = em.createQuery("SELECT  e.lname, e.fname, e.email, wpt.workPermitTypeText," +
+            "(select sum(w1.numdays) from Workpermit w1 where w1.approved is null and w1.employeeId = e and w1.workPermitTypeId = wpt) as appnull, " +
+            "(select sum(w2.numdays) from Workpermit w2 where w2.approved = 1 and w2.employeeId = e and w2.workPermitTypeId = wpt) as appone " +
+            "from Employee e ,Workpermittype wpt");
+        ;
+        LSTWorkPermitSyg = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(QRYWorkPermitSyg.getResultList());
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TBSyg = new javax.swing.JTable();
@@ -56,9 +60,9 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("Συγκεντρωτικός πίνακας αιτημάτων άδειας");
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, workpermitQuery, org.jdesktop.beansbinding.ObjectProperty.create(), TBSyg, org.jdesktop.beansbinding.BeanProperty.create("elements"));
-        bindingGroup.addBinding(binding);
-        binding.bind();
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, LSTWorkPermitSyg, TBSyg);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
         jScrollPane1.setViewportView(TBSyg);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -226,9 +230,11 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.util.List LSTWorkPermitSyg;
     private javax.swing.JButton PBExit;
     private javax.swing.JButton PBExtractXML;
     private javax.swing.JButton PBStartSim;
+    private javax.persistence.Query QRYWorkPermitSyg;
     private javax.swing.JTable TBAnal;
     private javax.swing.JTable TBSyg;
     private javax.swing.JButton jButton1;
@@ -237,8 +243,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private java.util.List<model.Workpermit> workpermitList;
-    private javax.persistence.Query workpermitQuery;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

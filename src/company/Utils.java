@@ -105,15 +105,17 @@ public class Utils {
        
         System.out.println("In Test");        
         //ερωτημα
-        String sqlqry = "";
-
-        Query qry = em.createQuery("select sum(w.numdays) as aaa from Workpermit w where w.approved=0 group by w.employeeId");
-
+        Query qry = //em.createQuery("select sum(w.numdays) as aaa from Workpermit w where w.approved=0 group by w.employeeId");
+                    em.createQuery("SELECT  e.lname, e.fname, e.email, wpt.workPermitTypeText," +
+        "(select sum(w1.numdays) from Workpermit w1 where w1.approved is null and w1.employeeId = e and w1.workPermitTypeId = wpt) as appnull, " +
+        "(select sum(w2.numdays) from Workpermit w2 where w2.approved = 1 and w2.employeeId = e and w2.workPermitTypeId = wpt) as appone " +
+        "from Employee e ,Workpermittype wpt");
         //Εκτέλεση ερωτήματος
-        Iterator <Long> bResults = qry.getResultList().iterator();
+        Iterator  bResults = qry.getResultList().iterator();
         
         while (bResults.hasNext()){
             System.out.println(bResults.next());
         }
     }
 }
+

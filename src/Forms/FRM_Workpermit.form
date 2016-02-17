@@ -2,24 +2,24 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Component class="javax.persistence.Query" name="workpermitQuery">
+    <Component class="javax.persistence.Query" name="QRYWorkPermitSyg">
       <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT e.lname, e.fname, e.email, sum(w.numdays)  from Employee e, Workpermit w group by e, w "/>
+        <Property name="query" type="java.lang.String" value=""/>
         <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="em" type="code"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="em.createQuery(&quot;SELECT  e.lname, e.fname, e.email, wpt.workPermitTypeText,&quot; +&#xd;&#xa;        &quot;(select sum(w1.numdays) from Workpermit w1 where w1.approved is null and w1.employeeId = e and w1.workPermitTypeId = wpt) as appnull, &quot; +&#xd;&#xa;        &quot;(select sum(w2.numdays) from Workpermit w2 where w2.approved = 1 and w2.employeeId = e and w2.workPermitTypeId = wpt) as appone &quot; +&#xd;&#xa;        &quot;from Employee e ,Workpermittype wpt&quot;);&#xd;&#xa;"/>
+      </AuxValues>
     </Component>
-    <Component class="java.util.List" name="workpermitList">
+    <Component class="java.util.List" name="LSTWorkPermitSyg">
       <Properties>
         <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="workpermitQuery"/>
+          <ComponentRef name="QRYWorkPermitSyg"/>
         </Property>
         <Property name="observable" type="boolean" value="true"/>
       </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;model.Workpermit&gt;"/>
-      </AuxValues>
     </Component>
   </NonVisualComponents>
   <Properties>
@@ -136,7 +136,7 @@
             </Property>
           </Properties>
           <BindingProperties>
-            <BindingProperty name="elements" source="workpermitQuery" target="TBSyg" targetPath="elements" updateStrategy="0" immediately="true"/>
+            <BindingProperty name="elements" source="LSTWorkPermitSyg" target="TBSyg" targetPath="elements" updateStrategy="0" immediately="true"/>
           </BindingProperties>
         </Component>
       </SubComponents>
