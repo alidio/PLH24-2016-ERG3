@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
-  <NonVisualComponents>
-    <Component class="javax.persistence.Query" name="QRYWorkPermitSyg">
-      <Properties>
-        <Property name="query" type="java.lang.String" value=""/>
-        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="em" type="code"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="em.createQuery(&quot;SELECT  e.lname, e.fname, e.email, wpt.workPermitTypeText,&quot; +&#xd;&#xa;        &quot;(select sum(w1.numdays) from Workpermit w1 where w1.approved is null and w1.employeeId = e and w1.workPermitTypeId = wpt) as appnull, &quot; +&#xd;&#xa;        &quot;(select sum(w2.numdays) from Workpermit w2 where w2.approved = 1 and w2.employeeId = e and w2.workPermitTypeId = wpt) as appone &quot; +&#xd;&#xa;        &quot;from Employee e ,Workpermittype wpt&quot;);&#xd;&#xa;"/>
-      </AuxValues>
-    </Component>
-    <Component class="java.util.List" name="LSTWorkPermitSyg">
-      <Properties>
-        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="QRYWorkPermitSyg"/>
-        </Property>
-        <Property name="observable" type="boolean" value="true"/>
-      </Properties>
-    </Component>
-  </NonVisualComponents>
+<Form version="1.6" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
   </Properties>
@@ -128,16 +107,29 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="TBSyg">
           <Properties>
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+              <Table columnCount="6" rowCount="0">
+                <Column editable="false" title="&#x395;&#x3c0;&#x3ce;&#x3bd;&#x3c5;&#x3bc;&#x3bf;" type="java.lang.String"/>
+                <Column editable="false" title="&#x38c;&#x3bd;&#x3bf;&#x3bc;&#x3b1;" type="java.lang.String"/>
+                <Column editable="false" title="E-mail" type="java.lang.String"/>
+                <Column editable="false" title="&#x3a0;&#x3c1;&#x3bf;&#x3ca;&#x3c3;&#x3c4;&#x3ac;&#x3bc;&#x3b5;&#x3bd;&#x3bf;&#x3c2;" type="java.lang.String"/>
+                <Column editable="false" title="&#x391;&#x3b9;&#x3c4;&#x3ae;&#x3bc;&#x3b1;&#x3c4;&#x3b1; &#x3a3;&#x3c5;&#x3bd;&#x3bf;&#x3bb;&#x3b9;&#x3ba;&#x3ac;" type="java.lang.Integer"/>
+                <Column editable="false" title="&#x391;&#x3b9;&#x3c4;&#x3ae;&#x3bc;&#x3b1;&#x3c4;&#x3b1; &#x395;&#x3b3;&#x3ba;&#x3b5;&#x3ba;&#x3c1;&#x3b9;&#x3bc;&#x3ad;&#x3bd;&#x3b1;" type="java.lang.Integer"/>
+              </Table>
+            </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0"/>
+            </Property>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Default Cursor"/>
+            </Property>
+            <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+              <JTableSelectionModel selectionMode="0"/>
             </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
-          <BindingProperties>
-            <BindingProperty name="elements" source="LSTWorkPermitSyg" target="TBSyg" targetPath="elements" updateStrategy="0" immediately="true"/>
-          </BindingProperties>
         </Component>
       </SubComponents>
     </Container>
@@ -169,12 +161,40 @@
         <Component class="javax.swing.JTable" name="TBAnal">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="4">
-                <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                <Column editable="true" title="Title 4" type="java.lang.Object"/>
+              <Table columnCount="5" rowCount="0">
+                <Column editable="false" title="&#x3a4;&#x3cd;&#x3c0;&#x3bf;&#x3c2;" type="java.lang.String"/>
+                <Column editable="false" title="&#x388;&#x3bd;&#x3b1;&#x3c1;&#x3be;&#x3b7;" type="java.lang.String"/>
+                <Column editable="false" title="&#x39b;&#x3ae;&#x3be;&#x3b7;" type="java.lang.String"/>
+                <Column editable="false" title="&#x397;&#x3bc;&#x3ad;&#x3c1;&#x3b5;&#x3c2;" type="java.lang.Integer"/>
+                <Column editable="false" title="&#x388;&#x3b3;&#x3ba;&#x3c1;&#x3b9;&#x3c3;&#x3b7;" type="java.lang.String"/>
               </Table>
+            </Property>
+            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+              <TableColumnModel selectionModel="0">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+              </TableColumnModel>
+            </Property>
+            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
         </Component>

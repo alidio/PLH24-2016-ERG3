@@ -99,8 +99,6 @@ public class Utils {
 
     }            
     
-    //Διαγράφει τις άδειες που δικαιούται ο Empoloyee 
-    //έστι ωστε να μποεί να διαγραφεί και ο ίδιος μετά
     public void test() {
        
         System.out.println("In Test");        

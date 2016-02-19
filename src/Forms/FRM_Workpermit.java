@@ -3,10 +3,14 @@ package Forms;
 import company.DBManager;
 import company.Utils;
 import java.io.File;
+import java.util.Iterator;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class FRM_Workpermit extends javax.swing.JFrame {
     
@@ -24,6 +28,16 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         initComponents();
     }
 
+    //Καθαρίζει τα δεδομένα του πίνακα
+    private void delTBLines(JTable tbl) {
+        DefaultTableModel dtm = (DefaultTableModel) TBSyg.getModel();
+        int rows = dtm.getRowCount();
+        for (int i=0;i<rows;i++) {
+            dtm.removeRow(0);
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,14 +46,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        QRYWorkPermitSyg = em.createQuery("SELECT  e.lname, e.fname, e.email, wpt.workPermitTypeText," +
-            "(select sum(w1.numdays) from Workpermit w1 where w1.approved is null and w1.employeeId = e and w1.workPermitTypeId = wpt) as appnull, " +
-            "(select sum(w2.numdays) from Workpermit w2 where w2.approved = 1 and w2.employeeId = e and w2.workPermitTypeId = wpt) as appone " +
-            "from Employee e ,Workpermittype wpt");
-        ;
-        LSTWorkPermitSyg = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(QRYWorkPermitSyg.getResultList());
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TBSyg = new javax.swing.JTable();
@@ -63,9 +70,31 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("Συγκεντρωτικός πίνακας αιτημάτων άδειας");
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, LSTWorkPermitSyg, TBSyg);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
+        TBSyg.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Επώνυμο", "Όνομα", "E-mail", "Προϊστάμενος", "Αιτήματα Συνολικά", "Αιτήματα Εγκεκριμένα"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TBSyg.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        TBSyg.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(TBSyg);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -78,15 +107,27 @@ public class FRM_Workpermit extends javax.swing.JFrame {
 
         TBAnal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Τύπος", "Έναρξη", "Λήξη", "Ημέρες", "Έγκριση"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(TBAnal);
 
         PBStartSim.setText("Έναρξη Προσομοίωσης");
@@ -171,8 +212,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        bindingGroup.bind();
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -200,57 +239,57 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void PBExtractXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExtractXMLActionPerformed
-        
-        int selectedRow = TBSyg.getSelectedRow();
-        
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "ExportPlayListIsNotSelected", "NoRecordIsSelected",
-                    JOptionPane.WARNING_MESSAGE);
-        } else {
-            selectedRow = TBSyg.convertRowIndexToModel(selectedRow);
-            playList = playListList.get(selectedRow);
-
-            //Δημιουργούμε παράθυρο επιλογέα αρχείου
-            JFileChooser chooser = new JFileChooser();
-            //Φιλτράρουμε ώστε ο τύπος αρχείου να είναι μόνο xml
-            XMLFileFilter fileFilterXML = new XMLFileFilter();
-            chooser.setFileFilter(fileFilterXML);
-
-            //ο τύπος του παραθύρου να είναι αποθήκευσης
-            int selection = chooser.showSaveDialog(this);
-
-            //Εάν επιλέχθηκε Αποθήκευση
-            if (selection == JFileChooser.APPROVE_OPTION) {
-
-                //το όνομα που δόθηκε στο αρχείο
-                File selectedFile = chooser.getSelectedFile();
-
-                if (selectedFile != null) {
-                    //Το αρχείο να έχει .xml extension
-                    if (!selectedFile.getName().toLowerCase().endsWith(".xml")) {
-                        selectedFile = new File(selectedFile + ".xml");
-                    }
-                    //Εάν το όνομα του αρχείου υπάρχει ήδη στην επιλεγμένη τοποθεσία για αποθήκευση
-                    if (selectedFile.exists()) {
-                        int confirm = JOptionPane.showConfirmDialog(this,"FileAlreadyExists","Replace", 
-                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                        if (confirm != JOptionPane.YES_OPTION) {
-                            return;
-                        }
-                    }
-
-                    if (loggerUtil.isDebugEnabled()) {
-                        loggerUtil.debug("Exporting PlayList: " + playList.getIdPlayList()
-                                + " to XML with filename: " + selectedFile.getName());
-                    }
-                    //Κάνουμε παραγωγή και εξαγωγή του XML αρχείου
-                    controller.exportPlayListToXML(playList, selectedFile);
-
-                } else {
-                    JOptionPane.showMessageDialog(this, "FileDefExportError", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
+//        
+//        int selectedRow = TBSyg.getSelectedRow();
+//        
+//        if (selectedRow == -1) {
+//            JOptionPane.showMessageDialog(this, "ExportPlayListIsNotSelected", "NoRecordIsSelected",
+//                    JOptionPane.WARNING_MESSAGE);
+//        } else {
+//            selectedRow = TBSyg.convertRowIndexToModel(selectedRow);
+//            playList = playListList.get(selectedRow);
+//
+//            //Δημιουργούμε παράθυρο επιλογέα αρχείου
+//            JFileChooser chooser = new JFileChooser();
+//            //Φιλτράρουμε ώστε ο τύπος αρχείου να είναι μόνο xml
+//            XMLFileFilter fileFilterXML = new XMLFileFilter();
+//            chooser.setFileFilter(fileFilterXML);
+//
+//            //ο τύπος του παραθύρου να είναι αποθήκευσης
+//            int selection = chooser.showSaveDialog(this);
+//
+//            //Εάν επιλέχθηκε Αποθήκευση
+//            if (selection == JFileChooser.APPROVE_OPTION) {
+//
+//                //το όνομα που δόθηκε στο αρχείο
+//                File selectedFile = chooser.getSelectedFile();
+//
+//                if (selectedFile != null) {
+//                    //Το αρχείο να έχει .xml extension
+//                    if (!selectedFile.getName().toLowerCase().endsWith(".xml")) {
+//                        selectedFile = new File(selectedFile + ".xml");
+//                    }
+//                    //Εάν το όνομα του αρχείου υπάρχει ήδη στην επιλεγμένη τοποθεσία για αποθήκευση
+//                    if (selectedFile.exists()) {
+//                        int confirm = JOptionPane.showConfirmDialog(this,"FileAlreadyExists","Replace", 
+//                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+//                        if (confirm != JOptionPane.YES_OPTION) {
+//                            return;
+//                        }
+//                    }
+//
+//                    if (loggerUtil.isDebugEnabled()) {
+//                        loggerUtil.debug("Exporting PlayList: " + playList.getIdPlayList()
+//                                + " to XML with filename: " + selectedFile.getName());
+//                    }
+//                    //Κάνουμε παραγωγή και εξαγωγή του XML αρχείου
+//                    controller.exportPlayListToXML(playList, selectedFile);
+//
+//                } else {
+//                    JOptionPane.showMessageDialog(this, "FileDefExportError", "Error", JOptionPane.ERROR_MESSAGE);
+//                }
+//            }
+//        }
     }//GEN-LAST:event_PBExtractXMLActionPerformed
     
     
@@ -291,12 +330,30 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         */
     }
 
+        //Διαγράφει τις άδειες που δικαιούται ο Empoloyee 
+    //έστι ωστε να μποεί να διαγραφεί και ο ίδιος μετά
+    public void test() {
+       
+        System.out.println("In Test");        
+        //ερωτημα
+        Query qry = //em.createQuery("select sum(w.numdays) as aaa from Workpermit w where w.approved=0 group by w.employeeId");
+                    em.createQuery("SELECT  e.lname, e.fname, e.email, wpt.workPermitTypeText," +
+        "(select sum(w1.numdays) from Workpermit w1 where w1.approved is null and w1.employeeId = e and w1.workPermitTypeId = wpt) as appnull, " +
+        "(select sum(w2.numdays) from Workpermit w2 where w2.approved = 1 and w2.employeeId = e and w2.workPermitTypeId = wpt) as appone " +
+        "from Employee e ,Workpermittype wpt");
+        //Εκτέλεση ερωτήματος
+        Iterator  bResults = qry.getResultList().iterator();
+        
+        while (bResults.hasNext()){
+            System.out.println(bResults.next());
+        }
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.util.List LSTWorkPermitSyg;
     private javax.swing.JButton PBExit;
     private javax.swing.JButton PBExtractXML;
     private javax.swing.JButton PBStartSim;
-    private javax.persistence.Query QRYWorkPermitSyg;
     private javax.swing.JTable TBAnal;
     private javax.swing.JTable TBSyg;
     private javax.swing.JButton jButton1;
@@ -305,6 +362,5 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
