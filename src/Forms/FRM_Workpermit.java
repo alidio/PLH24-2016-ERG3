@@ -4,8 +4,6 @@ import company.DBManager;
 import company.Utils;
 import company.EmployeeWPData;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.swing.JFrame;
@@ -17,6 +15,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private JFrame thisframe;  //Αυτό το παράθυρο (Χρήση στον listener)
     private JFrame prevwin; //Προηγούμενο παράθυρο για επιστροφή στο menu
     private EntityManager em;
+    private ArrayList<EmployeeWPData> empList;
 
     public FRM_Workpermit(JFrame prevwin) {
         this.prevwin = prevwin;
@@ -237,12 +236,63 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ArrayList<EmployeeWPData> empList;
+ 
+
+         // Ανακτούμε όλους τους υπαλλήλους από τον πίνακα EMPLOYEE της ΒΔ
+        // με την χρήση ενός Query
+        Query qry = em.createQuery("SELECT  e.lname, e.fname, e.email, e.managerId," +
+        "(select sum(w1.numdays) from Workpermit w1 where w1.employeeId = e), " +
+        "(select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1) " +
+        "from Employee e ");
+        // Τοποθετούμε τους υπαλλήλους στο ArrayList employeeList
+        empList = new ArrayList<>(qry.getResultList());
         
-        Utils u = new Utils();
-        List <EmployeeWPData> wp =  u.getWorkpermitSyg();
-        empList = new ArrayList<>(u.getWorkpermitSyg());
-        for (EmployeeWPData w:wp) System.out.println("sss");
+        delTBLines(TBSyg);
+        
+        // Ανακτούμε το TableModel του πίνακα employeeTable
+        DefaultTableModel Mdl = (DefaultTableModel) TBSyg.getModel();
+        // Θέτουμε ότι το model θα έχει τόσες γραμμές όσες είναι και τα
+        // τα στοιχεία του ArrayList
+        Mdl.setRowCount(empList.size());
+        // Για κάθε υπάλληλο που υπάρχει στο ArrayList
+        
+        EmployeeWPData www = new EmployeeWPData();
+        
+        for (int i = 0; i < empList.size(); i++) {
+            // Ανάκτηση των στοιχείων του υπαλλήλου
+            // Επώνυμο
+            www = (EmployeeWPData)empList.get(i);
+            System.out.println("11111");
+            System.out.println(www.getLname());
+//            String lname = empList.get(i).getLname();
+            // Όνομα
+//            String fname = empList.get(i).getFname();
+            
+            // Email
+//            String email = empList.get(i).getEmail();
+            // Ον/μο προϊσταμένου
+//            String manager;
+//            if (empList.get(i).getManagerId() != null) {
+//                manager = empList.get(i).getManagerId().toString();
+//            } else {
+//                manager = "";
+//            }
+            // Συνολικά αιτήματα άδειας
+//            Integer aitimataAdeias = empList.get(i).getSumWpDays();
+            // Εγκεκριμένες άδειες
+//            Integer egkekrimenesAdeies = empList.get(i).getApprovedWpDays();
+            // Θέτουμε τα στοιχεία του υπαλλήλου στο TableModel
+//            Mdl.setValueAt("lname", i, 0);
+//            Mdl.setValueAt(fname, i, 1);
+//            Mdl.setValueAt(email, i, 2);
+//            Mdl.setValueAt(manager, i, 3);
+//            Mdl.setValueAt(aitimataAdeias, i, 4);
+//            Mdl.setValueAt(egkekrimenesAdeies, i, 5);
+        }
+
+        
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void PBExtractXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExtractXMLActionPerformed
@@ -337,26 +387,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         */
     }
 
-        //Διαγράφει τις άδειες που δικαιούται ο Empoloyee 
-    //έστι ωστε να μποεί να διαγραφεί και ο ίδιος μετά
-    public void test() {
-       
-        System.out.println("In Test");        
-        //ερωτημα
-        Query qry = //em.createQuery("select sum(w.numdays) as aaa from Workpermit w where w.approved=0 group by w.employeeId");
-                    em.createQuery("SELECT  e.lname, e.fname, e.email, wpt.workPermitTypeText," +
-        "(select sum(w1.numdays) from Workpermit w1 where w1.approved is null and w1.employeeId = e and w1.workPermitTypeId = wpt) as appnull, " +
-        "(select sum(w2.numdays) from Workpermit w2 where w2.approved = 1 and w2.employeeId = e and w2.workPermitTypeId = wpt) as appone " +
-        "from Employee e ,Workpermittype wpt");
-        //Εκτέλεση ερωτήματος
-        Iterator  bResults = qry.getResultList().iterator();
-        
-        while (bResults.hasNext()){
-            System.out.println(bResults.next());
-        }
-    }
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton PBExit;
     private javax.swing.JButton PBExtractXML;

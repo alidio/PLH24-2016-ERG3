@@ -1,6 +1,5 @@
 package company;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.EntityManager;
@@ -97,17 +96,27 @@ public class Utils {
         Query query = em.createQuery("DELETE FROM Availableworkpermit a WHERE a.employeeId = :emp");
         int deletedCount = query.setParameter("emp", emp).executeUpdate();               
 
-    }            
+    }
     
-    //Ανάκτηση από τη βάση δεδομένω τα συγκεντρωτικά στοιχεία αδειών κάθε εργαζόμενου
-    public List<EmployeeWPData> getWorkpermitSyg() {
-       
+    
+    
+    //Επιστρέφει σε λίστα όλες τις εγγραφές των τύπων των αδειών
+    public List<EmployeeWPData> aaa() {
         //ερωτημα
-        return em.createQuery("SELECT  e.lname, e.fname, e.email, e.managerId," +
+        String sqlqry = "SELECT  e.lname, e.fname, e.email, e.managerId," +
         "(select sum(w1.numdays) from Workpermit w1 where w1.employeeId = e), " +
         "(select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1) " +
-        "from Employee e ",EmployeeWPData.class).getResultList();
-        
-    }
+        "from Employee e ";
+
+        Query qry = em.createQuery(sqlqry, EmployeeWPData.class);
+
+        //Εκτέλεση ερωτήματος
+        List<EmployeeWPData> WPList = qry.getResultList();
+
+        return WPList;                     
+    } 
+    
+    
+    
 }
 
