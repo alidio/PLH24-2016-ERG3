@@ -2,13 +2,13 @@ package Forms;
 
 import company.DBManager;
 import company.Utils;
-import java.io.File;
+import company.EmployeeWPData;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,6 +37,9 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         }
     }
     
+    private void fillTBSyg(){
+        
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -234,8 +237,12 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ArrayList<EmployeeWPData> empList;
+        
         Utils u = new Utils();
-        u.test();
+        List <EmployeeWPData> wp =  u.getWorkpermitSyg();
+        empList = new ArrayList<>(u.getWorkpermitSyg());
+        for (EmployeeWPData w:wp) System.out.println("sss");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void PBExtractXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExtractXMLActionPerformed
