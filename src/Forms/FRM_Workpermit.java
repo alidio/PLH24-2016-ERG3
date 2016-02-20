@@ -1,11 +1,12 @@
 package Forms;
 
 import company.DBManager;
-import company.Utils;
 import company.EmployeeWPData;
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +26,9 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         this.prevwin.setEnabled(false);
         
         initComponents();
+        
+        //Γέμισμα του συγκεντρωτικού πίνακα
+        fillTBSyg();
     }
 
     //Καθαρίζει τα δεδομένα του πίνακα
@@ -35,11 +39,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             dtm.removeRow(0);
         }
     }
-    
-    private void fillTBSyg(){
-        
-    }
-    
+   
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -235,64 +236,62 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_formWindowClosing
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
- 
-
-         // Ανακτούμε όλους τους υπαλλήλους από τον πίνακα EMPLOYEE της ΒΔ
-        // με την χρήση ενός Query
-        Query qry = em.createQuery("SELECT  e.lname, e.fname, e.email, e.managerId," +
-        "(select sum(w1.numdays) from Workpermit w1 where w1.employeeId = e), " +
-        "(select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1) " +
-        "from Employee e ");
-        // Τοποθετούμε τους υπαλλήλους στο ArrayList employeeList
-        empList = new ArrayList<>(qry.getResultList());
+    private void fillTBSyg(){
+       
+        // Ανακτούμε τα στοιχεία αδειών των υπαλλήλων της ΒΔ
+        TypedQuery<Object[]> query = em.createQuery(
+            "SELECT  e.lname, \n" +
+                    "e.fname, \n" +
+                    "e.email, \n" +
+                    "COALESCE((select e1.managerId.fname from Employee e1 where e1 = e),' '), \n" +
+                    "COALESCE((select e2.managerId.fname from Employee e2 where e2 = e),' '), \n" +
+                    "COALESCE((select sum(w1.numdays) from Workpermit w1 where w1.employeeId = e),0), \n" +
+                    "COALESCE((select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1),0) \n" +
+                    "FROM Employee e", Object[].class);
         
+        List<Object[]> results = query.getResultList();
+        
+        for (Object[] result : results) {
+        System.out.println("lname: " + result[0] + 
+                         "| fname: " + result[1]+
+                         "| email: " + result[2] + 
+                         "| mnager lname: " + result[3]+
+                         "| manager fname: " + result[4] + 
+                         "| synolikes: " + result[5]+
+                         "| eggekrimenes: " + result[6]);
+  } 
+        //Καθαρισμός του πίνακα
         delTBLines(TBSyg);
         
-        // Ανακτούμε το TableModel του πίνακα employeeTable
+        //TableModel του TBSyg
         DefaultTableModel Mdl = (DefaultTableModel) TBSyg.getModel();
-        // Θέτουμε ότι το model θα έχει τόσες γραμμές όσες είναι και τα
-        // τα στοιχεία του ArrayList
-        Mdl.setRowCount(empList.size());
+        //Ορισμός γραμμών TBSyg = γραμμές query
+        Mdl.setRowCount(results.size());
         // Για κάθε υπάλληλο που υπάρχει στο ArrayList
         
-        EmployeeWPData www = new EmployeeWPData();
-        
-        for (int i = 0; i < empList.size(); i++) {
-            // Ανάκτηση των στοιχείων του υπαλλήλου
-            // Επώνυμο
-            www = (EmployeeWPData)empList.get(i);
-            System.out.println("11111");
-            System.out.println(www.getLname());
-//            String lname = empList.get(i).getLname();
-            // Όνομα
-//            String fname = empList.get(i).getFname();
-            
-            // Email
-//            String email = empList.get(i).getEmail();
-            // Ον/μο προϊσταμένου
-//            String manager;
-//            if (empList.get(i).getManagerId() != null) {
-//                manager = empList.get(i).getManagerId().toString();
-//            } else {
-//                manager = "";
-//            }
-            // Συνολικά αιτήματα άδειας
-//            Integer aitimataAdeias = empList.get(i).getSumWpDays();
-            // Εγκεκριμένες άδειες
-//            Integer egkekrimenesAdeies = empList.get(i).getApprovedWpDays();
-            // Θέτουμε τα στοιχεία του υπαλλήλου στο TableModel
-//            Mdl.setValueAt("lname", i, 0);
-//            Mdl.setValueAt(fname, i, 1);
-//            Mdl.setValueAt(email, i, 2);
-//            Mdl.setValueAt(manager, i, 3);
-//            Mdl.setValueAt(aitimataAdeias, i, 4);
-//            Mdl.setValueAt(egkekrimenesAdeies, i, 5);
-        }
+        int i=0;
+        for (Object[] result : results) {
+            // Στοιχεία του υπαλλήλου
+            String lname = (String) result[0];
+            String fname = (String) result[1];            
+            String email = (String) result[2];            
+            String manager = (String) result[3] +" "+ (String) result[4];
+            Integer numdays = (int) result[5];
+            Integer approved = (int) result[6];
 
-        
-        
-        
+            Mdl.setValueAt(lname, i, 0);
+            Mdl.setValueAt(fname, i, 1);
+            Mdl.setValueAt(email, i, 2);
+            Mdl.setValueAt(manager, i, 3);
+            Mdl.setValueAt(numdays, i, 4);
+            Mdl.setValueAt(approved, i, 5);
+            i++;
+        }       
+           
+    }
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+      
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void PBExtractXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExtractXMLActionPerformed
