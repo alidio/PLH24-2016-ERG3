@@ -1,34 +1,40 @@
 package Forms;
 
 import company.DBManager;
-import company.EmployeeWPData;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
 
 public class FRM_Workpermit extends javax.swing.JFrame {
     
     private JFrame thisframe;  //Αυτό το παράθυρο (Χρήση στον listener)
     private JFrame prevwin; //Προηγούμενο παράθυρο για επιστροφή στο menu
     private EntityManager em;
-    private ArrayList<EmployeeWPData> empList;
+    private Long selectedEmpId;
+    private List<Object[]> results;
 
     public FRM_Workpermit(JFrame prevwin) {
         this.prevwin = prevwin;
         thisframe = this;
-        this.em = DBManager.em;
-        
+        this.em = DBManager.em;       
+    
         this.prevwin.setEnabled(false);
         
+        //Αρχικοποίηση στοιχείων φόρμας
         initComponents();
         
         //Γέμισμα του συγκεντρωτικού πίνακα
         fillTBSyg();
+        
+        //Ενεργοποίηση actionListener για την επιλογή 
+        //γραμμής στον συγκεντρωτικό πίνακα
+        crtTBSygActionListener();
     }
 
     //Καθαρίζει τα δεδομένα του πίνακα
@@ -60,7 +66,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         PBStartSim = new javax.swing.JButton();
         PBExtractXML = new javax.swing.JButton();
         PBExit = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -154,13 +159,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("test");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -186,8 +184,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(278, 278, 278)
                 .addComponent(PBExit)
                 .addContainerGap())
         );
@@ -208,10 +204,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PBStartSim)
                     .addComponent(PBExtractXML))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(PBExit)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 31, Short.MAX_VALUE)
+                .addComponent(PBExit)
                 .addContainerGap())
         );
 
@@ -236,11 +230,11 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_formWindowClosing
 
-    private void fillTBSyg(){
-       
+    private void fillTBSyg(){       
         // Ανακτούμε τα στοιχεία αδειών των υπαλλήλων της ΒΔ
         TypedQuery<Object[]> query = em.createQuery(
-            "SELECT  e.lname, \n" +
+            "SELECT  e.employeeId, " +
+                    "e.lname, \n" +
                     "e.fname, \n" +
                     "e.email, \n" +
                     "COALESCE((select e1.managerId.fname from Employee e1 where e1 = e),' '), \n" +
@@ -249,17 +243,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                     "COALESCE((select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1),0) \n" +
                     "FROM Employee e", Object[].class);
         
-        List<Object[]> results = query.getResultList();
+        results = query.getResultList();
         
-        for (Object[] result : results) {
-        System.out.println("lname: " + result[0] + 
-                         "| fname: " + result[1]+
-                         "| email: " + result[2] + 
-                         "| mnager lname: " + result[3]+
-                         "| manager fname: " + result[4] + 
-                         "| synolikes: " + result[5]+
-                         "| eggekrimenes: " + result[6]);
-  } 
         //Καθαρισμός του πίνακα
         delTBLines(TBSyg);
         
@@ -272,12 +257,13 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         int i=0;
         for (Object[] result : results) {
             // Στοιχεία του υπαλλήλου
-            String lname = (String) result[0];
-            String fname = (String) result[1];            
-            String email = (String) result[2];            
-            String manager = (String) result[3] +" "+ (String) result[4];
-            Integer numdays = (int) result[5];
-            Integer approved = (int) result[6];
+
+            String lname = (String) result[1];
+            String fname = (String) result[2];            
+            String email = (String) result[3];            
+            String manager = (String) result[4] +" "+ (String) result[5];
+            Integer numdays = (int) result[6];
+            Integer approved = (int) result[7];
 
             Mdl.setValueAt(lname, i, 0);
             Mdl.setValueAt(fname, i, 1);
@@ -290,10 +276,19 @@ public class FRM_Workpermit extends javax.swing.JFrame {
            
     }
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      
-    }//GEN-LAST:event_jButton1ActionPerformed
-
+    public void crtTBSygActionListener(){
+        TBSyg.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+           @Override
+           public void valueChanged(ListSelectionEvent event){
+              int row = TBSyg.getSelectedRow();
+              if (!(row<0)){
+                  System.out.println(results.get(row)[0]);
+              }
+           }
+        });
+    }
+    
+    
     private void PBExtractXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExtractXMLActionPerformed
 //        
 //        int selectedRow = TBSyg.getSelectedRow();
@@ -347,44 +342,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
 //            }
 //        }
     }//GEN-LAST:event_PBExtractXMLActionPerformed
+        
     
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FRM_Workpermit.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FRM_Workpermit.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FRM_Workpermit.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FRM_Workpermit.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        /*
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FRM_Workpermit().setVisible(true);
-            }
-        });
-        */
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton PBExit;
@@ -392,7 +351,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private javax.swing.JButton PBStartSim;
     private javax.swing.JTable TBAnal;
     private javax.swing.JTable TBSyg;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
