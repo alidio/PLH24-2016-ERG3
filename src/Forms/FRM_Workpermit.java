@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import model.Employee;
 
 
 public class FRM_Workpermit extends javax.swing.JFrame {
@@ -16,7 +17,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private JFrame thisframe;  //Αυτό το παράθυρο (Χρήση στον listener)
     private JFrame prevwin; //Προηγούμενο παράθυρο για επιστροφή στο menu
     private EntityManager em;
-    private Long selectedEmpId;
+    private Employee selectedEmpId;
     private List<Object[]> results;
 
     public FRM_Workpermit(JFrame prevwin) {
@@ -118,7 +119,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Τύπος", "Έναρξη", "Λήξη", "Ημέρες", "Έγκριση"
+                "Είδος", "Από", "Έως", "Ημέρες", "Έγκριση"
             }
         ) {
             Class[] types = new Class [] {
@@ -233,7 +234,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private void fillTBSyg(){       
         // Ανακτούμε τα στοιχεία αδειών των υπαλλήλων της ΒΔ
         TypedQuery<Object[]> query = em.createQuery(
-            "SELECT  e.employeeId, " +
+            "SELECT  e, " +
                     "e.lname, \n" +
                     "e.fname, \n" +
                     "e.email, \n" +
@@ -282,10 +283,57 @@ public class FRM_Workpermit extends javax.swing.JFrame {
            public void valueChanged(ListSelectionEvent event){
               int row = TBSyg.getSelectedRow();
               if (!(row<0)){
-                  System.out.println(results.get(row)[0]);
+                  selectedEmpId = (Employee) results.get(row)[0];
+                  System.out.println(selectedEmpId.getLname());
               }
            }
         });
+    }
+    
+    private void fillTBAnal(){       
+        // Ανακτούμε τα στοιχεία αδειών του υπαλλήλου που επιλέχθηκε
+        TypedQuery<Object[]> query = em.createQuery(
+            "SELECT  e, " +
+                    "e.lname, \n" +
+                    "e.fname, \n" +
+                    "e.email, \n" +
+                    "COALESCE((select e1.managerId.fname from Employee e1 where e1 = e),' '), \n" +
+                    "COALESCE((select e2.managerId.fname from Employee e2 where e2 = e),' '), \n" +
+                    "COALESCE((select sum(w1.numdays) from Workpermit w1 where w1.employeeId = e),0), \n" +
+                    "COALESCE((select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1),0) \n" +
+                    "FROM Employee e", Object[].class);
+        
+        results = query.getResultList();
+        
+        //Καθαρισμός του πίνακα
+        delTBLines(TBSyg);
+        
+        //TableModel του TBSyg
+        DefaultTableModel Mdl = (DefaultTableModel) TBSyg.getModel();
+        //Ορισμός γραμμών TBSyg = γραμμές query
+        Mdl.setRowCount(results.size());
+        // Για κάθε υπάλληλο που υπάρχει στο ArrayList
+        
+        int i=0;
+        for (Object[] result : results) {
+            // Στοιχεία του υπαλλήλου
+
+            String lname = (String) result[1];
+            String fname = (String) result[2];            
+            String email = (String) result[3];            
+            String manager = (String) result[4] +" "+ (String) result[5];
+            Integer numdays = (int) result[6];
+            Integer approved = (int) result[7];
+
+            Mdl.setValueAt(lname, i, 0);
+            Mdl.setValueAt(fname, i, 1);
+            Mdl.setValueAt(email, i, 2);
+            Mdl.setValueAt(manager, i, 3);
+            Mdl.setValueAt(numdays, i, 4);
+            Mdl.setValueAt(approved, i, 5);
+            i++;
+        }       
+        
     }
     
     
