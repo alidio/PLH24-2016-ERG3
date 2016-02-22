@@ -1,6 +1,7 @@
 package Forms;
 
 import company.DBManager;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -10,7 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Employee;
-
+import java.text.SimpleDateFormat;
 
 public class FRM_Workpermit extends javax.swing.JFrame {
     
@@ -18,7 +19,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private JFrame prevwin; //Προηγούμενο παράθυρο για επιστροφή στο menu
     private EntityManager em;
     private Employee selectedEmpId;
-    private List<Object[]> results;
+    private List<Object[]> resultsSyg;
+    private List<Object[]> resultsAnal;
 
     public FRM_Workpermit(JFrame prevwin) {
         this.prevwin = prevwin;
@@ -40,7 +42,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
 
     //Καθαρίζει τα δεδομένα του πίνακα
     private void delTBLines(JTable tbl) {
-        DefaultTableModel dtm = (DefaultTableModel) TBSyg.getModel();
+        DefaultTableModel dtm = (DefaultTableModel) tbl.getModel();
         int rows = dtm.getRowCount();
         for (int i=0;i<rows;i++) {
             dtm.removeRow(0);
@@ -137,6 +139,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        TBAnal.setRowSelectionAllowed(false);
         jScrollPane2.setViewportView(TBAnal);
 
         PBStartSim.setText("Έναρξη Προσομοίωσης");
@@ -244,7 +247,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                     "COALESCE((select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1),0) \n" +
                     "FROM Employee e", Object[].class);
         
-        results = query.getResultList();
+        resultsSyg = query.getResultList();
         
         //Καθαρισμός του πίνακα
         delTBLines(TBSyg);
@@ -252,11 +255,11 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         //TableModel του TBSyg
         DefaultTableModel Mdl = (DefaultTableModel) TBSyg.getModel();
         //Ορισμός γραμμών TBSyg = γραμμές query
-        Mdl.setRowCount(results.size());
+        Mdl.setRowCount(resultsSyg.size());
         // Για κάθε υπάλληλο που υπάρχει στο ArrayList
         
         int i=0;
-        for (Object[] result : results) {
+        for (Object[] result : resultsSyg) {
             // Στοιχεία του υπαλλήλου
 
             String lname = (String) result[1];
@@ -283,8 +286,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
            public void valueChanged(ListSelectionEvent event){
               int row = TBSyg.getSelectedRow();
               if (!(row<0)){
-                  selectedEmpId = (Employee) results.get(row)[0];
-                  System.out.println(selectedEmpId.getLname());
+                  selectedEmpId = (Employee) resultsSyg.get(row)[0];
+                  fillTBAnal();
               }
            }
         });
@@ -293,44 +296,43 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private void fillTBAnal(){       
         // Ανακτούμε τα στοιχεία αδειών του υπαλλήλου που επιλέχθηκε
         TypedQuery<Object[]> query = em.createQuery(
-            "SELECT  e, " +
-                    "e.lname, \n" +
-                    "e.fname, \n" +
-                    "e.email, \n" +
-                    "COALESCE((select e1.managerId.fname from Employee e1 where e1 = e),' '), \n" +
-                    "COALESCE((select e2.managerId.fname from Employee e2 where e2 = e),' '), \n" +
-                    "COALESCE((select sum(w1.numdays) from Workpermit w1 where w1.employeeId = e),0), \n" +
-                    "COALESCE((select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1),0) \n" +
-                    "FROM Employee e", Object[].class);
+              "SELECT   wpt.workPermitTypeText,\n" +
+                       "w.numdays, \n" +
+                       "w.approved, \n" +
+                       "w.fromdate, \n" +
+                       "w.todate \n" +
+                       " from Workpermit w, Workpermittype wpt \n" +
+                       " where w.workPermitTypeId = wpt" +
+                       " and w.employeeId = :emp", Object[].class);
         
-        results = query.getResultList();
+        resultsAnal = query.setParameter("emp",selectedEmpId).getResultList();
         
         //Καθαρισμός του πίνακα
-        delTBLines(TBSyg);
+        delTBLines(TBAnal);
         
         //TableModel του TBSyg
-        DefaultTableModel Mdl = (DefaultTableModel) TBSyg.getModel();
-        //Ορισμός γραμμών TBSyg = γραμμές query
-        Mdl.setRowCount(results.size());
-        // Για κάθε υπάλληλο που υπάρχει στο ArrayList
+        DefaultTableModel Mdl = (DefaultTableModel) TBAnal.getModel();
+        //Ορισμός γραμμών TBAnal = γραμμές query
+        Mdl.setRowCount(resultsAnal.size());
+        // Για κάθε άδεια που υπάρχει στο ArrayList
         
         int i=0;
-        for (Object[] result : results) {
+        for (Object[] result : resultsAnal) {
             // Στοιχεία του υπαλλήλου
-
-            String lname = (String) result[1];
-            String fname = (String) result[2];            
-            String email = (String) result[3];            
-            String manager = (String) result[4] +" "+ (String) result[5];
-            Integer numdays = (int) result[6];
-            Integer approved = (int) result[7];
-
-            Mdl.setValueAt(lname, i, 0);
-            Mdl.setValueAt(fname, i, 1);
-            Mdl.setValueAt(email, i, 2);
-            Mdl.setValueAt(manager, i, 3);
-            Mdl.setValueAt(numdays, i, 4);
-            Mdl.setValueAt(approved, i, 5);
+            String eidos = (String) result[0];
+            int hmeres = (int) result[1];            
+            String egrisi;
+            if (result[2] != null)  egrisi = "Ναί"; else egrisi = "Όχι";            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");            
+            String apo = sdf.format((Date) result[3]);
+            String ews = sdf.format((Date) result[4]);
+            
+            
+            Mdl.setValueAt(eidos, i, 0);
+            Mdl.setValueAt(apo, i, 1);
+            Mdl.setValueAt(ews, i, 2);
+            Mdl.setValueAt(hmeres, i, 3);
+            Mdl.setValueAt(egrisi, i, 4);
             i++;
         }       
         
