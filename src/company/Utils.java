@@ -8,22 +8,22 @@ import model.*;
 
 
 public class Utils {
+    
     private EntityManager em; //Entity manager
-
    
     public Utils(){
         this.em = DBManager.em;
     }
     
-    //Η μέθοδος εισάγει τις ημέρες άδειας που δικαιούται ο 
+    //Η μέθοδος εισάγει τις ημέρες άδειας που δικαιούται ο
     //Employee κατά την καταχωρησή του (Νέος).
     public void insWorkpermit(Employee e){
         
         if (!em.getTransaction().isActive()) {
             em.getTransaction().begin();
         }
-        try {                  
-                       
+        try {
+            
             List<Workpermittype> WPTList = GetWorkPermitById();
             for (Workpermittype w:WPTList){
             
@@ -88,7 +88,6 @@ public class Utils {
         return retval;
     }        
 
-    
     //Διαγράφει τις άδειες που δικαιούται ο Empoloyee 
     //έστι ωστε να μποεί να διαγραφεί και ο ίδιος μετά
     public void delEmployeeWorkPermit(Employee emp) {
@@ -97,8 +96,6 @@ public class Utils {
         int deletedCount = query.setParameter("emp", emp).executeUpdate();               
 
     }
-    
-    
     
     //Επιστρέφει σε λίστα όλες τις εγγραφές των τύπων των αδειών
     public List<EmployeeWPData> aaa() {
@@ -116,7 +113,9 @@ public class Utils {
         return WPList;                     
     } 
     
-    
+    public void WorkpermitApproval(Employee emp){
+        
+    }
     
 }
 

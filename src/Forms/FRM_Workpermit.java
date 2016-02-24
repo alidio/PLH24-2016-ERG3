@@ -13,16 +13,26 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Employee;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class FRM_Workpermit extends javax.swing.JFrame {
     
     private JFrame thisframe;  //Αυτό το παράθυρο (Χρήση στον listener)
     private JFrame prevwin; //Προηγούμενο παράθυρο για επιστροφή στο menu
     private EntityManager em;
-    private Employee selectedEmpId;
+    private Employee selectedEmpId; //Ο Εργαζόμενος που επιλέγει ο χρήστης
+    
+    //Τα περιεχόμενα του πίνακα με τα συγκεντρωτικά στοιχεία των εργαζόμενων
     private List<Object[]> resultsSyg;
+    
+    //Τα περιεχόμενα του πίνακα με τα αναλυτικά στοιχεία των εργαζόμενων
     private List<Object[]> resultsAnal;
-
+    
+    //Για κάθε εργαζόμενο θα δημιουργηθεί ένα αντικείμενο τύπου
+    //WorkPermitSimulation η οποία κάνει extend τον τύπο Thread.
+    //To WPSimulationList κρατάει σε μια λίστα όλα αυτά τα αντικείμενα.
+    private List<WorkPermitSimulation> WPSimulationList;
+    
     public FRM_Workpermit(JFrame prevwin) {
         this.prevwin = prevwin;
         thisframe = this;
@@ -39,6 +49,9 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         //Ενεργοποίηση actionListener για την επιλογή 
         //γραμμής στον συγκεντρωτικό πίνακα
         crtTBSygActionListener();
+        
+        //Aρχικοποίηση της λίστας.
+        WPSimulationList = new ArrayList<>();
     }
 
     //Καθαρίζει τα δεδομένα του πίνακα
@@ -225,8 +238,15 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_PBExitActionPerformed
 
     private void PBStartSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStartSimActionPerformed
-        WorkPermitSimulation e1 = new WorkPermitSimulation();
-        e1.start();
+        for (Object[] result : resultsSyg) {
+            // Στοιχεία του υπαλλήλου
+            WPSimulationList.add(new WorkPermitSimulation((Employee)result[0]));
+        }        
+        //Εκκίνηση των Thread
+        for (WorkPermitSimulation result : WPSimulationList) {
+            result.start();
+        }                
+        
     }//GEN-LAST:event_PBStartSimActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -278,7 +298,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             Mdl.setValueAt(numdays, i, 4);
             Mdl.setValueAt(approved, i, 5);
             i++;
-        }       
+        }
            
     }
     
@@ -324,11 +344,12 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             String eidos = (String) result[0];
             int hmeres = (int) result[1];            
             String egrisi;
-            if (result[2] != null)  egrisi = "Ναί"; else egrisi = "Όχι";            
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");            
+            if (result[2] != null){
+                if ((int)result[2] == 1)egrisi = "Ναί"; else egrisi = "Όχι";
+            } else egrisi = "Πρός Έγκριση";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             String apo = sdf.format((Date) result[3]);
-            String ews = sdf.format((Date) result[4]);
-            
+            String ews = sdf.format((Date) result[4]);            
             
             Mdl.setValueAt(eidos, i, 0);
             Mdl.setValueAt(apo, i, 1);
