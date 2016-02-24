@@ -1,6 +1,7 @@
 package Forms;
 
 import company.DBManager;
+import company.WorkPermitSimulation;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -224,7 +225,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_PBExitActionPerformed
 
     private void PBStartSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStartSimActionPerformed
-        // TODO add your handling code here:
+        WorkPermitSimulation e1 = new WorkPermitSimulation();
+        e1.start();
     }//GEN-LAST:event_PBStartSimActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
