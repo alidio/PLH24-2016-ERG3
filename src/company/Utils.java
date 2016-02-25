@@ -99,20 +99,24 @@ public class Utils {
 
     }
     
+    
+    //Η μέθοδος αυτή αναζητά τις προς έγριση άδειες των υφισταμένων του emp 
+    //και με τυχαίο τρόπο τις ενημερώνει με 'έγκριση' ή 'απόρριψη'. 
+    //Μετά τις καταχωρεί πάλι στη βάση.
     public void WorkpermitApproval(Employee emp){
         System.out.println("in WorkpermitApproval");
-        System.out.println(emp.getLname()+"  -- emp.getWorkpermitList().size()="+emp.getWorkpermitList().size());
+        System.out.println(emp.getLname() + "  -- emp.getWorkpermitList().size()=" + emp.getWorkpermitList().size());
         
         String sqlqry = "select w from Workpermit w, Employee e " +
                         "where w.employeeId = e " +
                         "and w.approved is null "+
-                        "and e.managerId = :manager ";        
+                        "and e.managerId = :manager ";
+        
         Query qry = em.createQuery(sqlqry,Workpermit.class).setParameter("manager", emp);
 
         //Εκτέλεση ερωτήματος
-        List<Workpermit> WPList = qry.getResultList();        
+        List<Workpermit> WPList = qry.getResultList();
         
-//----------------------------------
         try {
             if (!em.getTransaction().isActive()) {
                 em.getTransaction().begin();
@@ -126,6 +130,24 @@ public class Utils {
             ex.printStackTrace();            
             em.getTransaction().rollback();
         } 
+    }
+    
+    //Ελέγχει, αν υπάρχει υποβληθέν από τον ίδιο αίτημα 
+    //το οποίο δε έχει ελεγχθεί
+    public boolean chkMyWorkpermit(Employee emp){
+        boolean retval=false;
+        
+        //ερωτημα
+        String sqlqry = "select w from Workpermit w "
+                      + "where w.employeeId = :emp "
+                      + "and w.approved is null ";
+
+        Query qry = em.createQuery(sqlqry, Workpermit.class).setParameter("emp", emp);
+
+        //Εκτέλεση ερωτήματος
+        List<Workpermit> WPList = qry.getResultList();
+        
+        if (WPList.size()>0) return true; else  return false;
     }
     
 }

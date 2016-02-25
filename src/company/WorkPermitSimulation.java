@@ -32,14 +32,22 @@ public class WorkPermitSimulation extends Thread{
             u.WorkpermitApproval(emp);
         }               
         
-        //Αναμονή 10 έως 30 sec με τυχαίο τρόπο.
+        //Αναμονή 10 έως 30 sec με τυχαίο τρόπο (R4.Β).
         try {
+            //Αναμονή σε milisecond. 1000msec = 1sec
             int i = 10000 + rnd.nextInt(20000);
             sleep(30000);            
         } catch (InterruptedException ex) {
             Logger.getLogger(WorkPermitSimulation.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
+        //Έλεγχος εάν υπάρχει υποβληθέν αίτημα που δεν έχει ελεγθεί.
+        if (u.chkMyWorkpermit(emp)) {
+            System.out.println("Yparxei!!!");
+        }else {
+            System.out.println("DEN Yparxei...");
+        }
+        
         System.out.println(emp.getLname() + " ---> Τέλος");
     }    
      
