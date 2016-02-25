@@ -50,8 +50,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         //γραμμής στον συγκεντρωτικό πίνακα
         crtTBSygActionListener();
         
-        //Aρχικοποίηση της λίστας.
-        WPSimulationList = new ArrayList<>();
     }
 
     //Καθαρίζει τα δεδομένα του πίνακα
@@ -238,6 +236,9 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_PBExitActionPerformed
 
     private void PBStartSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStartSimActionPerformed
+        //Aρχικοποίηση της λίστας.
+        WPSimulationList = new ArrayList<>();
+        
         for (Object[] result : resultsSyg) {
             // Στοιχεία του υπαλλήλου
             WPSimulationList.add(new WorkPermitSimulation((Employee)result[0]));

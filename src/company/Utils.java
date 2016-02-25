@@ -2,6 +2,7 @@ package company;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import model.*;
@@ -10,6 +11,7 @@ import model.*;
 public class Utils {
     
     private EntityManager em; //Entity manager
+    private final static Random rnd = new Random();
    
     public Utils(){
         this.em = DBManager.em;
@@ -97,24 +99,33 @@ public class Utils {
 
     }
     
-    //Επιστρέφει σε λίστα όλες τις εγγραφές των τύπων των αδειών
-    public List<EmployeeWPData> aaa() {
-        //ερωτημα
-        String sqlqry = "SELECT  e.lname, e.fname, e.email, e.managerId," +
-        "(select sum(w1.numdays) from Workpermit w1 where w1.employeeId = e), " +
-        "(select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1) " +
-        "from Employee e ";
-
-        Query qry = em.createQuery(sqlqry, EmployeeWPData.class);
+    public void WorkpermitApproval(Employee emp){
+        System.out.println("in WorkpermitApproval");
+        System.out.println(emp.getLname()+"  -- emp.getWorkpermitList().size()="+emp.getWorkpermitList().size());
+        
+        String sqlqry = "select w from Workpermit w, Employee e " +
+                        "where w.employeeId = e " +
+                        "and w.approved is null "+
+                        "and e.managerId = :manager ";        
+        Query qry = em.createQuery(sqlqry,Workpermit.class).setParameter("manager", emp);
 
         //Εκτέλεση ερωτήματος
-        List<EmployeeWPData> WPList = qry.getResultList();
-
-        return WPList;                     
-    } 
-    
-    public void WorkpermitApproval(Employee emp){
+        List<Workpermit> WPList = qry.getResultList();        
         
+//----------------------------------
+        try {
+            if (!em.getTransaction().isActive()) {
+                em.getTransaction().begin();
+            }        
+            for (Workpermit w:WPList){
+                em.persist(w);
+                w.setApproved(rnd.nextInt(2));
+            }
+            em.getTransaction().commit();
+        }catch (Exception ex) {
+            ex.printStackTrace();            
+            em.getTransaction().rollback();
+        } 
     }
     
 }
