@@ -1,5 +1,7 @@
 package company;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,69 +50,21 @@ public class WorkPermitSimulation extends Thread{
             System.out.println(emp.getLname() + " --- > DEN Yparxei...");
             //Αν δεν υπάρχει άλλο αίτημα, το οποίο δεν έχει ελεγχθεί 
             //τότε υποβάλλει αίτημα άδειας με τυχαίο τρόπο
+            
+            //Στη λίστα αυτή βρίκονται οι τύποι άδειας και τα υπόλοιπα αδείας για 
+            //τον συγκεκριμένο υπάλληλο.        
+            //Kρατά τα υπόλοιπα αδειών από κάθε τύπο άδειας
+            List<RestWorkPermit> wp = new ArrayList<>();
+            wp = u.getRestDaysByWPT(emp);
+            
+            if (wp.size() > 0) {
+                //Εαν υπάρχει έστω και ένας τύπος άδειας που έχει υπόλοιπο
+                //υποβάλλω αίτημα άδειας στην τύχη.
+            
+            }            
         }
         
         System.out.println(emp.getLname() + " ---> Τέλος");
     }    
- 
-
-
-
-
-
-///test-------------------------
-
-
-    public void getEmployeeBalanceForWorkPermitType(Employee emp){
-       
-
-            for (int i=0; i<empList.size(); i++){
-                Employee emp = (Employee)empList.get(i);
-                //Για κάθε υπάλληλο βρίσκεται το σύνολο των αδειών που έχει πάρει, 
-                //για τον δοθέντα τύπο άδειας.
-                Query wpQuery = em.createQuery(  "select wp.workPermitTypeId, sum(wp.numdays) as dsum \n" +
-                                                  " from Workpermit wp \n" +
-                                                  "where wp.employeeId = :emp \n" +
-                                                  "  and wp.workPermitTypeId.workPermitTypeId = :workPermitTypeId \n" +                        
-                                               "group by wp.workPermitTypeId");
-
-                wpQuery.setParameter("emp", emp);
-                wpQuery.setParameter("workPermitTypeId", workPermitId);
-
-                List workPermitTypeIdList = wpQuery.getResultList();
-
-                if (workPermitTypeIdList != null){
-                    for (int j=0; j<workPermitTypeIdList.size(); j++){
-                        
-                        Workpermittype wpt = (Workpermittype)((Object[])workPermitTypeIdList.get(j))[0];
-                        Long dsum = (Long)((Object[])workPermitTypeIdList.get(j))[1];
-
-                        //Για κάθε υπάλληλο αναζητείται πόσες ημέρες άδειας δικαιούται 
-                        //για τον δοθέντα τύπο άδειας
-                        Query awpQuery = em.createQuery(  "select awp.availableDays \n" +
-                                                  "  from Availableworkpermit awp \n" +
-                                                  " where awp.employeeId = :emp \n"+
-                                                  "   and awp.workPermitTypeId = :workPermitTypeId");
-
-                        awpQuery.setParameter("emp", emp);
-                        awpQuery.setParameter("workPermitTypeId", wpt);
-
-                        int availableDays = (int)awpQuery.getSingleResult();                  
-                        //Το string εξόδου παράγεται υπολογίζοντας τις ημέρες που δικαιούται,
-                        //πλύν τις ημέρες που έχει ήδη πάρει
-                        myList.add( "Όνομα Εργαζόμενου:" + emp.getLname() + " " + emp.getFname() + ", Υπόλοιπο άδειας:" + (availableDays - dsum));
-
-                    }
-                }
-            }
-        }
-        return myList;
-    }
-
-
-
-
-
-
     
 }

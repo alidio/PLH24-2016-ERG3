@@ -1,5 +1,6 @@
 package company;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -132,7 +133,7 @@ public class Utils {
         } 
     }
     
-    //Ελέγχει, αν υπάρχει υποβληθέν από τον ίδιο αίτημα 
+    //Ελέγχει, αν υπάρχει υποβληθέν από τον Employee αίτημα 
     //το οποίο δε έχει ελεγχθεί
     public boolean chkMyWorkpermit(Employee emp){
         boolean retval=false;
@@ -148,6 +149,51 @@ public class Utils {
         List<Workpermit> WPList = qry.getResultList();
         
         if (WPList.size()>0) return true; else  return false;
+    }
+
+ 
+
+
+
+///test-------------------------
+    public List<RestWorkPermit> getRestDaysByWPT(Employee emp){
+                        
+        //Aναζητεί πόσες ημέρες άδειας δικαιούται για κάθε τύπο άδειας
+        //για τον emp
+        Query awpQuery = em.createQuery(  "select awp  " +
+                                          "from Availableworkpermit awp " +
+                                          "where awp.employeeId = :emp");
+        awpQuery.setParameter("emp", emp); 
+        
+        List<Availableworkpermit> AWPList = awpQuery.getResultList();
+        
+        
+        //Kρατά τα υπόλοιπα αδειών από κάθε τύπο άδειας
+        List<RestWorkPermit> wp = new ArrayList<>();
+        
+        for (Availableworkpermit awp:AWPList){
+            //Βρίσκει πόσες ημέρες έχει πάρει για κάθε τύπο άδειας που 
+            //έχει δικαίωμα να δηλώσει
+            Query wpQuery = em.createQuery(  "select sum(wp.numdays) as dsum \n" +
+                                             "from Workpermit wp \n" +
+                                             "where wp.employeeId = :emp \n" +
+                                             "and wp.approved = 1 " +
+                                             "and wp.workPermitTypeId = :wptype " +
+                                             "group by wp.numdays");
+
+                wpQuery.setParameter("emp", emp);
+                wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());
+
+                int sumNdays = (int) wpQuery.getSingleResult();            
+                
+                //Προσθέτω στη λίστα το αντικείμενο που έχει μέσα του τον υπάλληλο,
+                //τον τύπο της άδειας και τις ημέρες που έχουν καταναλωθέι απο αυτόν τον
+                //τυπο άδειας. Το υπόλοιπο υπολογίζεται αυτόματα μεσα στην κλάση.                
+                wp.add(new RestWorkPermit(emp,awp,sumNdays));
+        }
+        
+        return wp;
+        
     }
     
 }
