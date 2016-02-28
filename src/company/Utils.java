@@ -1,6 +1,7 @@
 package company;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -19,7 +20,8 @@ public class Utils {
     }
     
     //Η μέθοδος εισάγει τις ημέρες άδειας που δικαιούται ο
-    //Employee κατά την καταχωρησή του (Νέος).
+    //Employee κατά την καταχωρησή του (Νέος),
+    //με την προυπόθεση ότι αυτή είναι καταχωρημένη στη βάση δεδομένων.
     public void insWorkpermit(Employee e){
         
         if (!em.getTransaction().isActive()) {
@@ -105,9 +107,7 @@ public class Utils {
     //και με τυχαίο τρόπο τις ενημερώνει με 'έγκριση' ή 'απόρριψη'. 
     //Μετά τις καταχωρεί πάλι στη βάση.
     public void WorkpermitApproval(Employee emp){
-        System.out.println("in WorkpermitApproval");
-        System.out.println(emp.getLname() + "  -- emp.getWorkpermitList().size()=" + emp.getWorkpermitList().size());
-        
+               
         String sqlqry = "select w from Workpermit w, Employee e " +
                         "where w.employeeId = e " +
                         "and w.approved is null "+
@@ -173,23 +173,35 @@ public class Utils {
         
         for (Availableworkpermit awp:AWPList){
             //Βρίσκει πόσες ημέρες έχει πάρει για κάθε τύπο άδειας που 
-            //έχει δικαίωμα να δηλώσει
-            Query wpQuery = em.createQuery(  "select sum(wp.numdays) as dsum \n" +
-                                             "from Workpermit wp \n" +
-                                             "where wp.employeeId = :emp \n" +
+            //έχει δικαίωμα να δηλώσει     
+            Query wpQuery = em.createQuery(  "select coalesce(sum(wp.numdays),0), " +
+                                             "max(wp.todate) " +
+                                             "from Workpermit wp " +
+                                             "where wp.employeeId = :emp " +
                                              "and wp.approved = 1 " +
                                              "and wp.workPermitTypeId = :wptype " +
-                                             "group by wp.numdays");
+                                             "group by wp.numdays ",int.class);
 
                 wpQuery.setParameter("emp", emp);
                 wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());
 
-                int sumNdays = (int) wpQuery.getSingleResult();            
+                List sumNdaysList = wpQuery.getResultList();
                 
                 //Προσθέτω στη λίστα το αντικείμενο που έχει μέσα του τον υπάλληλο,
-                //τον τύπο της άδειας και τις ημέρες που έχουν καταναλωθέι απο αυτόν τον
-                //τυπο άδειας. Το υπόλοιπο υπολογίζεται αυτόματα μεσα στην κλάση.                
-                wp.add(new RestWorkPermit(emp,awp,sumNdays));
+                //τον τύπο της άδειας και τις ημέρες που έχουν καταναλωθεί απο αυτόν τον
+                //τυπο άδειας. Το υπόλοιπο υπολογίζεται αυτόματα μεσα στην κλάση.
+                //Επίσης στη λίστα βάζω την μεγαλύτερη ημερομηνία που έχει παρθεί η
+                //άδεια για να υπολογίσω τη νέα άδεια απο την ημέρα αυτή και μετά.
+                int sumNdays;
+                Date maxDate=null;
+                if (!sumNdaysList.isEmpty()) {
+                    sumNdays=(int)((Object[])sumNdaysList.get(0))[0];
+                    maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
+                } else sumNdays=0;
+                    
+                wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));
+                
+                
         }
         
         return wp;
